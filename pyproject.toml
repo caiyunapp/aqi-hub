@@ -1,0 +1,30 @@
+
+[project]
+name = "aqi-hub"
+version = "0.1.0"
+description = "Air quality index hub"
+authors = [
+    {name = "Water Ghost", email = "maxlee1991zyz@gmail.com"},
+]
+readme = "README.md"
+requires-python = ">=3.13"
+keywords = ["aqi", "air quality"]
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn"
+Issues = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn/issues"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "ruff>=0.9.7",
+]
+
+[tool.setuptools]
+license-files = ["LICENSE"]
+
+[build-system]
+requires = ["setuptools", "wheel", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
