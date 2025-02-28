@@ -1,7 +1,7 @@
 
 [project]
 name = "aqi-hub"
-version = "0.1.0.dev0"
+version = "0.1.0.dev1"
 description = "Air quality index hub"
 authors = [
     {name = "Water Ghost", email = "maxlee1991zyz@gmail.com"},
