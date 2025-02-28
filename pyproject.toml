@@ -28,3 +28,8 @@ license-files = ["LICENSE"]
 [build-system]
 requires = ["setuptools", "wheel", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[[tool.uv.index]]
+name = "aqi-hub"
+url = "https://aqi-hub.pypi.org/simple/"
+publish-url = "https://aqi-hub.pypi.org/legacy/"
