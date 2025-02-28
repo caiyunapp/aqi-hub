@@ -12,4 +12,5 @@ aqi 计算，以及分指数计算
 ```python
 from aqi_hub.aqi import cal_iaqi_cn
 
+print("hello")
 ```

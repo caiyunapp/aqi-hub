@@ -53,8 +53,8 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        token: ${{ secrets.PYPI_API_TOKEN }}
+    #   with:
+    #     token: ${{ secrets.PYPI_API_TOKEN }}
 
   github-release:
     name: >-
@@ -101,10 +101,10 @@ jobs:
 
   publish-to-testpypi:
     name: Publish Python 🐍 distribution 📦 to TestPyPI
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}  # only sign and upload to GitHub Release on non-tag pushes
     needs:
     - build
     runs-on: ubuntu-latest
-
     environment:
       name: testpypi
       url: https://test.pypi.org/p/aqi-hub
