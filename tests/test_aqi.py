@@ -1,6 +1,6 @@
 import pytest
 
-from src.aqi_hub.aqi import cal_iaqi_cn
+from aqi_hub.aqi import cal_iaqi_cn
 
 
 @pytest.mark.parametrize(
