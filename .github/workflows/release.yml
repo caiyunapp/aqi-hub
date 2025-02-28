@@ -60,7 +60,7 @@ jobs:
     name: >-
       Sign the Python 🐍 distribution 📦 with Sigstore
       and upload them to GitHub Release
-    if: !startsWith(github.ref, 'refs/tags/')  # only sign and upload to GitHub Release on non-tag pushes
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}  # only sign and upload to GitHub Release on non-tag pushes
     needs:
     - publish-to-pypi
     runs-on: ubuntu-latest
