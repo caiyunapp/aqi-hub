@@ -4,7 +4,14 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn"
+Issues = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn/issues"
 
 [dependency-groups]
 dev = [
