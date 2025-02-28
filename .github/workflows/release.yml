@@ -119,3 +119,4 @@ jobs:
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         repository-url: https://test.pypi.org/legacy/
+        token: ${{ secrets.TEST_PYPI_API_TOKEN }}  # Use the secret here
