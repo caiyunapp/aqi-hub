@@ -1,6 +1,6 @@
 import pytest
 
-from aqi_hub.aqi import cal_iaqi_cn
+from aqi_hub.aqi_cn.aqi import cal_iaqi_cn
 
 
 @pytest.mark.parametrize(
@@ -203,4 +203,5 @@ def test_o3_8h(value, expected, item):
 
 
 if __name__ == "__main__":
-    test_so2_1h(3000, None, "SO2_1H")
+    # test_so2_1h(3000, None, "SO2_1H")
+    pytest.main(["-v", "tests/test_aqi.py"])

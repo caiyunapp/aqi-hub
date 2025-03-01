@@ -5,7 +5,22 @@ aqi 计算，以及分指数计算
 
 ## 计算方法
 
-计算方法参照 [HJ 633--2012_环境空气质量指数 （AQI） 技术规定 （试行）.pdf](https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf)
+### AQI (CN)
+
+计算方法参照中华人民共和国生态环境部标准： [HJ 633--2012 环境空气质量指数 （AQI） 技术规定 （试行）.pdf](https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf)
+
+### AQI (USA)
+
+计算方法参考 US EPA: [Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf)
+
+| AQI Range  | Descriptor                     | Color  |
+| ---------- | ------------------------------ | ------ |
+| 0 to 50    | Good                           | Green  |
+| 51 to 100  | Moderate                       | Yellow |
+| 101 to 150 | Unhealthy for Sensitive Groups | Orange |
+| 151 to 200 | Unhealthy                      | Red    |
+| 201 to 300 | Very Unhealthy                 | Purple |
+| 301+       | Hazardous                      | Maroon |
 
 ## 使用方法
 

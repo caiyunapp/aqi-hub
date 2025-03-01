@@ -1,11 +1,9 @@
 
 [project]
 name = "aqi-hub"
-version = "0.1.0.dev4"
+version = "0.1.0.dev5"
 description = "Air quality index hub"
-authors = [
-    {name = "Water Ghost", email = "maxlee1991zyz@gmail.com"},
-]
+authors = [{ name = "Water Ghost", email = "maxlee1991zyz@gmail.com" }]
 readme = "README.md"
 requires-python = ">=3.8"
 keywords = ["aqi", "air quality"]
@@ -17,19 +15,19 @@ Homepage = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn"
 Issues = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn/issues"
 
 [dependency-groups]
-dev = [
-    "pytest",
-    "ruff",
-]
+dev = ["pytest", "ruff"]
 
 [tool.setuptools]
 license-files = ["LICENSE"]
+packages = ["aqi_hub"]
+package-dir = { "" = "src" }
+
+[tool.setuptools.package-data]
+"*" = ["py.typed"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["docs/*"]
 
 [build-system]
 requires = ["setuptools", "wheel", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
-
-# [[tool.uv.index]]
-# name = "aqi-hub"
-# url = "https://pypi.org/project/aqi-hub/"
-# publish-url = "https://aqi-hub.pypi.org/legacy/"
