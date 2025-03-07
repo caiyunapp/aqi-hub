@@ -28,14 +28,14 @@ aqi 计算，以及分指数计算
 
 #### AQI Color
 
-| Color                                                                          | R   | G   | B   | --- | C   | M   | Y   | K   |
-| ------------------------------------------------------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- |
-| <span style="background-color: rgb(0, 228, 0); color: white;">Green</span>     | 0   | 228 | 0   | --- | 40  | 0   | 100 | 0   |
-| <span style="background-color: rgb(255, 255, 0); color: black;">Yellow</span>  | 255 | 255 | 0   | --- | 0   | 0   | 100 | 0   |
-| <span style="background-color: rgb(255, 126, 0); color: white;">Orange</span>  | 255 | 126 | 0   | --- | 0   | 52  | 100 | 0   |
-| <span style="background-color: rgb(255, 0, 0); color: white;">Red</span>       | 255 | 0   | 0   | --- | 0   | 100 | 100 | 0   |
-| <span style="background-color: rgb(143, 63, 151); color: white;">Purple</span> | 143 | 63  | 151 | --- | 5   | 58  | 0   | 41  |
-| <span style="background-color: rgb(126, 0, 35); color: white;">Maroon</span>   | 126 | 0   | 35  | --- | 30  | 100 | 100 | 30  |
+| Color   | R   | G   | B   | HEX     | C   | M   | Y   | K   |
+|---------|-----|-----|-----|---------|-----|-----|-----|-----|
+| ![Green](https://img.shields.io/badge/Green-0_228_0-%2300E400)   | 0   | 228 | 0   | #00E400 | 40  | 0   | 100 | 0   |
+| ![Yellow](https://img.shields.io/badge/Yellow-255_255_0-%23FFFF00)  | 255 | 255 | 0   | #FFFF00 | 0   | 0   | 100 | 0   |
+| ![Orange](https://img.shields.io/badge/Orange-255_126_0-%23FF7E00)  | 255 | 126 | 0   | #FF7E00 | 0   | 52  | 100 | 0   |
+| ![Red](https://img.shields.io/badge/Red-255_0_0-%23FF0000)     | 255 | 0   | 0   | #FF0000 | 0   | 100 | 100 | 0   |
+| ![Purple](https://img.shields.io/badge/Purple-143_63_151-%238F3F97) | 143 | 63  | 151 | #8F3F97 | 5   | 58  | 0   | 41  |
+| ![Maroon](https://img.shields.io/badge/Maroon-126_0_35-%237E0023)  | 126 | 0   | 35  | #7E0023 | 30  | 100 | 100 | 30  |
 
 ## 使用方法
 
