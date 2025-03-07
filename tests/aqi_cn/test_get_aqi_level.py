@@ -1,4 +1,5 @@
 import pytest
+
 from aqi_hub.aqi_cn.aqi import get_aqi_level
 
 

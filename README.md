@@ -1,7 +1,10 @@
 # AQI Hub
 
+![AQI Hub Cover](docs/cover.png)
+
 aqi 计算，以及分指数计算  
 目前仅支持中国 aqi 计算。
+
 
 ## 计算方法
 
@@ -29,3 +32,9 @@ from aqi_hub.aqi import cal_iaqi_cn
 
 print("hello")
 ```
+
+
+## 参考文献
+
+1. [HJ 633--2012 环境空气质量指数 （AQI） 技术规定 （试行）.pdf](https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf)
+2. [Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf)
