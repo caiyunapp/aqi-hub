@@ -116,6 +116,7 @@ breakpoints = {
     "PM25_24H": pm25_24h_breakpoints,
     "PM10_24H": pm10_24h_breakpoints,
     "SO2_1H": so2_1h_breakpoints,
+    "SO2_24H": so2_24h_breakpoints,
     "NO2_1H": no2_1h_breakpoints,
     "CO_8H": co_8h_breakpoints,
     "O3_8H": o3_8h_breakpoints,
@@ -134,9 +135,13 @@ minmaxs = {
 
 # 临界值
 singularities = {
+    # O3_1H 小于 0.125 无数据
     "O3_1H": 0.125,  # ppm
+    # O3_8H 大于 0.201 无数据
     "O3_8H": 0.201,  # ppm
-    "SO2_1H": 305,  # ppb
+    # SO2_1H 大于 304 无数据
+    "SO2_1H": 304,  # ppb
+    # SO2_24H  小于 305 无数据
     "SO2_24H": 305,  # ppb
 }
 
