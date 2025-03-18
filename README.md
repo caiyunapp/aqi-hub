@@ -1,6 +1,6 @@
 # AQI Hub
 
-![AQI Hub Cover](docs/cover.png)
+![AQI Hub Cover](docs/cover.jpeg)
 
 aqi 计算，以及分指数计算  
 目前仅支持中国 aqi 计算。
