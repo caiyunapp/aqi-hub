@@ -22,7 +22,7 @@ POLLUTANT_CN = [
 ]
 POLLUTANT_MAP = dict(zip(POLLUTANT, POLLUTANT_CN))
 
-# 分段标准，格式为列表 [(BP_lo, BP_hi, IAQI_lo, IAQI_hi)
+# 分段标准，格式为列表 [(BP_lo, BP_hi, IAQI_lo, IAQI_hi)]
 # 定义 PM2.5 的分段标准
 pm25_breakpoints = [
     (0, 35, 0, 50),  # 优
