@@ -3,7 +3,26 @@
 """
 
 import pytest
+
 from aqi_hub.aqi_usa.aqi import _calculate_iaqi
+
+
+@pytest.mark.parametrize(
+    "conc,item,expected",
+    [
+        (None, "PM25_24H", None),  # PM2.5 浓度为 None
+        (None, "PM10_24H", None),  # PM10 浓度为 None
+        (None, "CO_8H", None),  # CO 浓度为 None
+        (None, "NO2_1H", None),  # NO2 浓度为 None
+        (None, "SO2_1H", None),  # SO2 1小时浓度为 None
+        (None, "SO2_24H", None),  # SO2 24小时浓度为 None
+        (None, "O3_1H", None),  # O3 1小时浓度为 None
+        (None, "O3_8H", None),  # O3 8小时浓度为 None
+    ],
+)
+def test_none_concentration(conc, item, expected):
+    """测试浓度值为 None 的情况"""
+    assert _calculate_iaqi(conc, item) == expected
 
 
 @pytest.mark.parametrize(
@@ -118,7 +137,7 @@ def test_calculate_iaqi_warnings(conc, item, warning_msg, expected):
 @pytest.mark.parametrize(
     "conc,item,error_msg",
     [
-        (100, "INVALID_POLLUTANT", "item must be one of"),
+        (100, "INVALID_POLLUTANT", "item: .* must be one of dict_keys"),
     ],
 )
 def test_calculate_iaqi_errors(conc, item, error_msg):

@@ -5,18 +5,16 @@ AQI_USA 计算模块
 """
 
 import warnings
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from aqi_hub.aqi_usa.common import (
+    AQI_COLOR,
     AQI_LEVEL,
-    POLLUTANT,
-    POLLUTANT_UNITS,
     breakpoints,
     minmaxs,
     scales,
-    singularities
+    singularities,
 )
-
 
 
 def _calculate_iaqi(conc: Union[int, float], item: str) -> Union[int, None]:
@@ -31,7 +29,9 @@ def _calculate_iaqi(conc: Union[int, float], item: str) -> Union[int, None]:
         对应的 IAQI 值
     """
     if item not in breakpoints:
-        raise ValueError(f"item must be one of {breakpoints.keys()}")
+        raise ValueError(f"item: {item} must be one of {breakpoints.keys()}")
+    if conc is None:
+        return None
     bk_points = breakpoints[item]
     _min, _max = minmaxs[item]
     # 浓度值缩放因子, 用于将浓度值转换为整数
@@ -117,210 +117,247 @@ def _calculate_iaqi(conc: Union[int, float], item: str) -> Union[int, None]:
     return None
 
 
-# def cal_iaqi_usa(item: str, value: Union[int, float]) -> Optional[int]:
-#     """计算单项污染物的IAQI
+def cal_aqi_usa(
+    pm25: float,
+    pm10: float,
+    so2_1h: float,
+    no2: float,
+    co: float,
+    o3_8h: float,
+    so2_24h: float = None,
+    o3_1h: float = None,
+) -> Tuple[int, Dict[str, int]]:
+    """计算美国AQI
 
-#     Args:
-#         item: 污染物类型，如 PM25_24H, PM10_24H 等
-#         value: 污染物浓度值
+    Args:
+        pm25: PM2.5浓度, 单位: μg/m³ (24小时平均)
+        pm10: PM10浓度, 单位: μg/m³ (24小时平均)
+        so2_1h: SO2浓度, 单位: ppb (1小时平均)
+        so2_24h: SO2浓度, 单位: ppb (24小时平均)
+        no2: NO2浓度, 单位: ppb (1小时平均)
+        co: CO浓度, 单位: ppm (8小时平均)
+        o3_8h: O3浓度, 单位: ppm (8小时平均)
+        o3_1h: O3浓度, 单位: ppm (1小时平均)，可选
 
-#     Returns:
-#         IAQI值，如果超出范围则返回None
-#     """
-#     if not isinstance(value, (int, float)):
-#         raise TypeError("value must be int or float")
-#     if value < 0:
-#         raise ValueError("value must be greater than or equal to 0")
-#     if item not in breakpoints:
-#         raise ValueError(f"item must be one of {breakpoints.keys()}")
+    Returns:
+        (AQI, IAQI) 元组:
+            - AQI: AQI值
+            - IAQI: 各污染物的IAQI值字典
+    """
+    # 使用cal_iaqi_usa计算各污染物的IAQI
+    pm25_iaqi = _calculate_iaqi(pm25, "PM25_24H")
+    pm10_iaqi = _calculate_iaqi(pm10, "PM10_24H")
+    so2_1h_iaqi = _calculate_iaqi(so2_1h, "SO2_1H")
+    so2_24h_iaqi = _calculate_iaqi(so2_24h, "SO2_24H")
+    # 取 SO2 1小时和24小时 IAQI 的最大值
+    so2_iaqi = (
+        max(filter(None, [so2_1h_iaqi, so2_24h_iaqi]))
+        if any([so2_1h_iaqi, so2_24h_iaqi])
+        else None
+    )
+    no2_iaqi = _calculate_iaqi(no2, "NO2_1H")
+    co_iaqi = _calculate_iaqi(co, "CO_8H")
+    o3_8h_iaqi = _calculate_iaqi(o3_8h, "O3_8H")
+    o3_1h_iaqi = _calculate_iaqi(o3_1h, "O3_1H")
+    # 取 O3 8小时和1小时 IAQI 的最大值
+    o3_iaqi = (
+        max(filter(None, [o3_8h_iaqi, o3_1h_iaqi]))
+        if any([o3_8h_iaqi, o3_1h_iaqi])
+        else None
+    )
 
-#     # # 检查是否是特殊情况
-#     # if item in special_cases and value in special_cases[item]:
-#     #     return special_cases[item][value]
+    iaqi_values = [
+        pm25_iaqi,
+        pm10_iaqi,
+        so2_iaqi,
+        no2_iaqi,
+        co_iaqi,
+        o3_iaqi,
+    ]
 
-#     # # 检查是否是通用特殊情况
-#     # if value in general_special_cases:
-#     #     return general_special_cases[value]
-
-#     # 检查是否超过最大阈值
-#     if item in max_thresholds and value >= max_thresholds[item]:
-#         return 500
-
-#     # 先进行浓度值截断
-#     truncated_value = value  # 不对测试用例中的值进行截断，避免精度问题
-
-#     # 获取断点列表
-#     bp_list = breakpoints[item]
-
-#     iaqi = _calculate_iaqi(truncated_value, bp_list)
-#     # 确保返回整数值，并且不超过500
-#     return min(round(iaqi), 500)
-
-
-# def cal_aqi_usa(
-#     pm25: float,
-#     pm10: float,
-#     so2: float,
-#     no2: float,
-#     co: float,
-#     o3_8h: float,
-#     o3_1h: float = None,
-# ) -> Tuple[int, Dict[str, int]]:
-#     """计算美国AQI
-
-#     Args:
-#         pm25: PM2.5浓度, 单位: μg/m³ (24小时平均)
-#         pm10: PM10浓度, 单位: μg/m³ (24小时平均)
-#         so2: SO2浓度, 单位: ppb (1小时平均)
-#         no2: NO2浓度, 单位: ppb (1小时平均)
-#         co: CO浓度, 单位: ppm (8小时平均)
-#         o3_8h: O3浓度, 单位: ppb (8小时平均)
-#         o3_1h: O3浓度, 单位: ppb (1小时平均)，可选
-
-#     Returns:
-#         (AQI, IAQI) 元组:
-#             - AQI: AQI值
-#             - IAQI: 各污染物的IAQI值字典
-#     """
-#     # 使用cal_iaqi_usa计算各污染物的IAQI
-#     pm25_iaqi = cal_iaqi_usa("PM25_24H", pm25)
-#     pm10_iaqi = cal_iaqi_usa("PM10_24H", pm10)
-#     so2_iaqi = cal_iaqi_usa("SO2_1H", so2)
-#     no2_iaqi = cal_iaqi_usa("NO2_1H", no2)
-#     co_iaqi = cal_iaqi_usa("CO_8H", co)
-#     o3_8h_iaqi = cal_iaqi_usa("O3_8H", o3_8h)
-
-#     iaqi_values = [pm25_iaqi, pm10_iaqi, so2_iaqi, no2_iaqi, co_iaqi, o3_8h_iaqi]
-
-#     if o3_1h is not None:
-#         o3_1h_iaqi = cal_iaqi_usa("O3_1H", o3_1h)
-#         iaqi_values.append(o3_1h_iaqi)
-#     else:
-#         o3_1h_iaqi = None
-
-#     iaqi = {
-#         "PM2.5": pm25_iaqi,
-#         "PM10": pm10_iaqi,
-#         "SO2": so2_iaqi,
-#         "NO2": no2_iaqi,
-#         "CO": co_iaqi,
-#         "O3_8H": o3_8h_iaqi,
-#     }
-#     if o3_1h_iaqi is not None:
-#         iaqi["O3_1H"] = o3_1h_iaqi
-
-#     # 处理所有值都为0的情况
-#     if all(v == 0 for v in iaqi_values):
-#         return 0, iaqi
-
-#     # 如果任何一个值达到500，整体AQI就是500
-#     if any(v == 500 for v in iaqi_values):
-#         return 500, iaqi
-
-#     aqi = max(iaqi_values)
-#     return aqi, iaqi
+    iaqi = {
+        "PM2.5": pm25_iaqi,
+        "PM10": pm10_iaqi,
+        "SO2": so2_iaqi,
+        "NO2": no2_iaqi,
+        "CO": co_iaqi,
+        "O3": o3_iaqi,
+    }
+    aqi = max(filter(None, iaqi_values)) if any(iaqi_values) else None
+    return aqi, iaqi
 
 
-# def get_aqi_level(aqi: int) -> int:
-#     """获取美国标准下的AQI等级
+def get_aqi_level(aqi: int) -> int:
+    """获取美国标准下的AQI等级
 
-#     Args:
-#         aqi: AQI值
+    Args:
+        aqi: AQI值
 
-#     Returns:
-#         AQI等级 (1-6)
-#     """
-#     if aqi < 0 or aqi > 500:
-#         raise ValueError("AQI must be between 0 and 500")
-#     if aqi <= 50:
-#         return 1
-#     elif aqi <= 100:
-#         return 2
-#     elif aqi <= 150:
-#         return 3
-#     elif aqi <= 200:
-#         return 4
-#     elif aqi <= 300:
-#         return 5
-#     else:
-#         return 6
-
-
-# def cal_primary_pollutant(iaqi: Dict[str, int]) -> List[str]:
-#     """计算首要污染物
-
-#     Args:
-#         iaqi: IAQI字典
-
-#     Returns:
-#         首要污染物列表
-#     """
-#     max_iaqi = max(filter(None, iaqi.values()))
-#     return [pollutant for pollutant, value in iaqi.items() if value == max_iaqi]
+    Returns:
+        AQI等级 (1-6)
+    """
+    if aqi < 0 or aqi > 500:
+        raise ValueError("AQI must be between 0 and 500")
+    if aqi <= 50:
+        return 1
+    elif aqi <= 100:
+        return 2
+    elif aqi <= 150:
+        return 3
+    elif aqi <= 200:
+        return 4
+    elif aqi <= 300:
+        return 5
+    else:
+        return 6
 
 
-# class AQI:
-#     """美国空气质量指数 (AQI) 计算器
+def cal_primary_pollutant(iaqi: Dict[str, int]) -> List[str]:
+    """计算首要污染物
 
-#     Args:
-#         pm25: PM2.5浓度, 单位: μg/m³ (24小时平均)
-#         pm10: PM10浓度, 单位: μg/m³ (24小时平均)
-#         so2: SO2浓度, 单位: ppb (1小时平均)
-#         no2: NO2浓度, 单位: ppb (1小时平均)
-#         co: CO浓度, 单位: ppm (8小时平均)
-#         o3_8h: O3浓度, 单位: ppb (8小时平均)
-#         o3_1h: O3浓度, 单位: ppb (1小时平均)，可选
-#     """
+    Args:
+        iaqi: IAQI字典
 
-#     def __init__(
-#         self,
-#         pm25: float,
-#         pm10: float,
-#         so2: float,
-#         no2: float,
-#         co: float,
-#         o3_8h: float,
-#         o3_1h: float = None,
-#     ):
-#         self.pm25 = pm25
-#         self.pm10 = pm10
-#         self.so2 = so2
-#         self.no2 = no2
-#         self.co = co
-#         self.o3_8h = o3_8h
-#         self.o3_1h = o3_1h
-#         self.AQI, self.IAQI = self.get_aqi()
+    Returns:
+        首要污染物列表
+    """
+    if not iaqi:
+        raise ValueError("IAQI字典不能为空")
 
-#     def get_aqi(self) -> Tuple[int, Dict[str, int]]:
-#         """计算AQI和IAQI
+    # 检查是否所有值都为None
+    if all(value is None for value in iaqi.values()):
+        import warnings
 
-#         Returns:
-#             (AQI, IAQI) 元组
-#         """
-#         return cal_aqi_usa(
-#             self.pm25,
-#             self.pm10,
-#             self.so2,
-#             self.no2,
-#             self.co,
-#             self.o3_8h,
-#             self.o3_1h,
-#         )
+        warnings.warn("所有污染物IAQI值均为None")
+        return []
 
-#     @property
-#     def aqi_level(self) -> int:
-#         """获取AQI等级
+    max_iaqi = max(filter(None, iaqi.values()))
+    return [pollutant for pollutant, value in iaqi.items() if value == max_iaqi]
 
-#         Returns:
-#             AQI等级 (1-6)
-#         """
-#         return get_aqi_level(self.AQI)
 
-#     @property
-#     def primary_pollutant(self) -> List[str]:
-#         """获取首要污染物
+def get_aqi_level_color(
+    aqi_level: int, color_type: str
+) -> Union[str, Tuple[int, int, int], Tuple[int, int, int, int]]:
+    """获取AQI等级对应的颜色
 
-#         Returns:
-#             首要污染物列表
-#         """
-#         return cal_primary_pollutant(self.IAQI)
+    其中, 颜色类型包括 RGB, CMYK, RGB_HEX, CMYK_HEX.
+
+    Args:
+        aqi_level (int): AQI等级
+        color_type (str): 颜色类型, 可选 RGB, CMYK, RGB_HEX, CMYK_HEX
+
+    Returns:
+        如果是 RGB 或 CMYK, 返回一个元组 (int, int, int) 或 (int, int, int, int)
+        如果是 RGB_HEX 或 CMYK_HEX, 返回一个字符串
+    """
+    if aqi_level not in AQI_LEVEL:
+        raise ValueError(f"aqi_level must be one of {AQI_LEVEL}")
+    if color_type not in AQI_COLOR:
+        raise ValueError(f"color_type must be one of {list(AQI_COLOR.keys())}")
+    return AQI_COLOR[color_type][aqi_level]
+
+
+class AQI:
+    """美国空气质量指数 (AQI) 计算器
+
+    Args:
+        pm25: PM2.5浓度, 单位: μg/m³ (24小时平均)
+        pm10: PM10浓度, 单位: μg/m³ (24小时平均)
+        so2: SO2浓度, 单位: ppb (1小时平均)
+        no2: NO2浓度, 单位: ppb (1小时平均)
+        co: CO浓度, 单位: ppm (8小时平均)
+        o3_8h: O3浓度, 单位: ppb (8小时平均)
+        o3_1h: O3浓度, 单位: ppb (1小时平均)，可选
+    """
+
+    def __init__(
+        self,
+        pm25: float,
+        pm10: float,
+        so2_1h: float,
+        no2: float,
+        co: float,
+        o3_8h: float,
+        so2_24h: float = None,
+        o3_1h: float = None,
+    ):
+        self.pm25 = pm25
+        self.pm10 = pm10
+        self.so2_1h = so2_1h
+        self.so2_24h = so2_24h
+        self.no2 = no2
+        self.co = co
+        self.o3_8h = o3_8h
+        self.o3_1h = o3_1h
+        self.AQI, self.IAQI = self.get_aqi()
+
+    def get_aqi(self) -> Tuple[int, Dict[str, int]]:
+        """计算AQI和IAQI
+
+        Returns:
+            (AQI, IAQI) 元组
+        """
+        return cal_aqi_usa(
+            self.pm25,
+            self.pm10,
+            self.so2_1h,
+            self.no2,
+            self.co,
+            self.o3_8h,
+            self.so2_24h,
+            self.o3_1h,
+        )
+
+    @property
+    def aqi_level(self) -> int:
+        """获取AQI等级
+
+        Returns:
+            AQI等级 (1-6)
+        """
+        return get_aqi_level(self.AQI)
+
+    @property
+    def primary_pollutant(self) -> List[str]:
+        """获取首要污染物
+
+        Returns:
+            首要污染物列表
+        """
+        return cal_primary_pollutant(self.IAQI)
+
+    @property
+    def aqi_color_rgb(self) -> Tuple[int, int, int]:
+        """获取AQI等级对应的RGB颜色值
+
+        Returns:
+            RGB颜色值元组 (R, G, B)
+        """
+        return get_aqi_level_color(self.aqi_level, "RGB")
+
+    @property
+    def aqi_color_cmyk(self) -> Tuple[int, int, int, int]:
+        """获取AQI等级对应的CMYK颜色值
+
+        Returns:
+            CMYK颜色值元组 (C, M, Y, K)
+        """
+        return get_aqi_level_color(self.aqi_level, "CMYK")
+
+    @property
+    def aqi_color_rgb_hex(self) -> str:
+        """获取AQI等级对应的RGB十六进制颜色值
+
+        Returns:
+            RGB十六进制颜色值字符串
+        """
+        return get_aqi_level_color(self.aqi_level, "RGB_HEX")
+
+    @property
+    def aqi_color_cmyk_hex(self) -> str:
+        """获取AQI等级对应的CMYK十六进制颜色值
+
+        Returns:
+            CMYK十六进制颜色值字符串
+        """
+        return get_aqi_level_color(self.aqi_level, "CMYK_HEX")
