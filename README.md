@@ -71,55 +71,96 @@ pip install aqi-hub
 ### 中国 AQI 计算
 
 ```python
-from aqi_hub.aqi_cn import cal_iaqi, cal_aqi
+from aqi_hub.aqi_cn.aqi import cal_iaqi_cn, cal_aqi_cn_hourly, cal_aqi_cn_daily
 
-# 计算单项污染物的 IAQI (Individual Air Quality Index)
-pm25_iaqi = cal_iaqi('pm2.5', 35)    # PM2.5: 35 μg/m³
-pm10_iaqi = cal_iaqi('pm10', 80)     # PM10: 80 μg/m³
-o3_iaqi = cal_iaqi('o3', 120)        # O3: 120 μg/m³
-co_iaqi = cal_iaqi('co', 1.5)        # CO: 1.5 mg/m³
-no2_iaqi = cal_iaqi('no2', 40)       # NO2: 40 μg/m³
-so2_iaqi = cal_iaqi('so2', 30)       # SO2: 30 μg/m³
+def main():
+    # 计算单项污染物的 IAQI (Individual Air Quality Index)
+    # 1小时值
+    pm25_1h_iaqi = cal_iaqi_cn('PM25_1H', 35)     # PM2.5: 35 μg/m³
+    pm10_1h_iaqi = cal_iaqi_cn('PM10_1H', 80)     # PM10: 80 μg/m³
+    o3_1h_iaqi = cal_iaqi_cn('O3_1H', 120)        # O3: 120 μg/m³
+    co_1h_iaqi = cal_iaqi_cn('CO_1H', 1.5)        # CO: 1.5 mg/m³
+    no2_1h_iaqi = cal_iaqi_cn('NO2_1H', 40)       # NO2: 40 μg/m³
+    so2_1h_iaqi = cal_iaqi_cn('SO2_1H', 30)       # SO2: 30 μg/m³
 
-print(f"PM2.5 IAQI: {pm25_iaqi}")  # 示例输出：PM2.5 IAQI: 50
-print(f"PM10 IAQI: {pm10_iaqi}")   # 示例输出：PM10 IAQI: 57
-print(f"O3 IAQI: {o3_iaqi}")       # 示例输出：O3 IAQI: 75
+    # 24小时值
+    pm25_24h_iaqi = cal_iaqi_cn('PM25_24H', 35)   # PM2.5: 35 μg/m³
+    pm10_24h_iaqi = cal_iaqi_cn('PM10_24H', 80)   # PM10: 80 μg/m³
+    o3_8h_iaqi = cal_iaqi_cn('O3_8H', 120)        # O3: 120 μg/m³（8小时滑动平均）
+    co_24h_iaqi = cal_iaqi_cn('CO_24H', 1.5)      # CO: 1.5 mg/m³
+    no2_24h_iaqi = cal_iaqi_cn('NO2_24H', 40)     # NO2: 40 μg/m³
+    so2_24h_iaqi = cal_iaqi_cn('SO2_24H', 30)     # SO2: 30 μg/m³
 
-# 计算总体 AQI（取各项污染物 IAQI 的最大值）
-pollutants = {
-    'pm2.5': 35,    # μg/m³
-    'pm10': 80,     # μg/m³
-    'o3': 120,      # μg/m³
-    'co': 1.5,      # mg/m³
-    'no2': 40,      # μg/m³
-    'so2': 30       # μg/m³
-}
-aqi_result = cal_aqi(pollutants)
-print(f"AQI: {aqi_result['aqi']}")                 # AQI 值
-print(f"主要污染物: {aqi_result['primary']}")      # 主要污染物
-print(f"空气质量等级: {aqi_result['level']}")      # 空气质量等级
-print(f"空气质量类别: {aqi_result['category']}")   # 空气质量类别
-print(f"颜色: {aqi_result['color']}")             # 对应的颜色（RGB HEX）
+    print("\n单项污染物 IAQI 计算结果（1小时值）：")
+    print(f"PM2.5 IAQI: {pm25_1h_iaqi}")
+    print(f"PM10 IAQI: {pm10_1h_iaqi}")
+    print(f"O3 IAQI: {o3_1h_iaqi}")
+    print(f"CO IAQI: {co_1h_iaqi}")
+    print(f"NO2 IAQI: {no2_1h_iaqi}")
+    print(f"SO2 IAQI: {so2_1h_iaqi}")
+
+    print("\n单项污染物 IAQI 计算结果（24小时值）：")
+    print(f"PM2.5 IAQI: {pm25_24h_iaqi}")
+    print(f"PM10 IAQI: {pm10_24h_iaqi}")
+    print(f"O3(8h) IAQI: {o3_8h_iaqi}")
+    print(f"CO IAQI: {co_24h_iaqi}")
+    print(f"NO2 IAQI: {no2_24h_iaqi}")
+    print(f"SO2 IAQI: {so2_24h_iaqi}")
+
+    # 准备污染物数据（1小时值）
+    pm25_1h = 35     # μg/m³
+    pm10_1h = 80     # μg/m³
+    o3_1h = 120      # μg/m³
+    co_1h = 1.5      # mg/m³
+    no2_1h = 40      # μg/m³
+    so2_1h = 30      # μg/m³
+
+    # 准备污染物数据（24小时值）
+    pm25_24h = 35    # μg/m³
+    pm10_24h = 80    # μg/m³
+    o3_8h = 120      # μg/m³
+    co_24h = 1.5     # mg/m³
+    no2_24h = 40     # μg/m³
+    so2_24h = 30     # μg/m³
+
+    # 计算小时 AQI
+    hourly_aqi, hourly_primary = cal_aqi_cn_hourly(
+        pm25=pm25_1h,
+        pm10=pm10_1h,
+        so2=so2_1h,
+        no2=no2_1h,
+        co=co_1h,
+        o3=o3_1h
+    )
+    
+    print("\n小时 AQI 计算结果：")
+    print(f"AQI: {hourly_aqi}")
+    print(f"主要污染物: {hourly_primary}")
+
+    # 计算日均值 AQI
+    daily_aqi, daily_primary = cal_aqi_cn_daily(
+        pm25=pm25_24h,
+        pm10=pm10_24h,
+        so2=so2_24h,
+        no2=no2_24h,
+        co=co_24h,
+        o3=o3_8h
+    )
+    
+    print("\n日均值 AQI 计算结果：")
+    print(f"AQI: {daily_aqi}")
+    print(f"主要污染物: {daily_primary}")
+
+if __name__ == '__main__':
+    main()
 ```
 
 ### 美国 AQI 计算
 
 ```python
-from aqi_hub.aqi_usa import cal_iaqi, cal_aqi
+from aqi_hub.aqi_usa.aqi import cal_aqi_usa
 
 # 计算单项污染物的 AQI
-pm25_aqi = cal_iaqi('pm2.5', 35)     # PM2.5: 35 μg/m³（与中国单位相同）
-pm10_aqi = cal_iaqi('pm10', 80)      # PM10: 80 μg/m³（与中国单位相同）
-o3_aqi = cal_iaqi('o3', 60)          # O3: 60 ppb（约等于 117.72 μg/m³）
-co_aqi = cal_iaqi('co', 1.3)         # CO: 1.3 ppm（约等于 1.49 mg/m³）
-no2_aqi = cal_iaqi('no2', 53)        # NO2: 53 ppb（约等于 99.64 μg/m³）
-so2_aqi = cal_iaqi('so2', 30)        # SO2: 30 ppb（约等于 78.6 μg/m³）
-
-print(f"PM2.5 AQI: {pm25_aqi}")  # 示例输出：PM2.5 AQI: 99
-print(f"PM10 AQI: {pm10_aqi}")   # 示例输出：PM10 AQI: 60
-print(f"O3 AQI: {o3_aqi}")       # 示例输出：O3 AQI: 84
-
-# 计算总体 AQI（取各项污染物 AQI 的最大值）
 pollutants = {
     'pm2.5': 35,     # μg/m³
     'pm10': 80,      # μg/m³
@@ -128,7 +169,7 @@ pollutants = {
     'no2': 53,       # ppb
     'so2': 30        # ppb
 }
-aqi_result = cal_aqi(pollutants)
+aqi_result = cal_aqi_usa(pollutants)
 print(f"AQI: {aqi_result['aqi']}")                    # AQI 值
 print(f"主要污染物: {aqi_result['primary']}")         # 主要污染物
 print(f"空气质量描述: {aqi_result['descriptor']}")    # 空气质量描述
@@ -137,7 +178,7 @@ print(f"颜色: {aqi_result['color']}")                # 对应的颜色（RGB H
 
 ### 返回值说明
 
-#### 中国标准 (cal_aqi_cn)
+#### 中国标准 (cal_aqi_cn_hourly/cal_aqi_cn_daily)
 
 返回一个字典，包含以下字段：  
 - `aqi`: AQI 值（整数）
@@ -146,7 +187,7 @@ print(f"颜色: {aqi_result['color']}")                # 对应的颜色（RGB H
 - `category`: 空气质量类别（优、良、轻度污染等）
 - `color`: 对应的颜色代码（RGB HEX）
 
-#### 美国标准 (cal_aqi_us)
+#### 美国标准 (cal_aqi_usa)
 
 返回一个字典，包含以下字段：  
 - `aqi`: AQI 值（整数）

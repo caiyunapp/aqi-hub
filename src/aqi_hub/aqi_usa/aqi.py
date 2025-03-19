@@ -17,7 +17,7 @@ from aqi_hub.aqi_usa.common import (
 )
 
 
-def _calculate_iaqi(conc: Union[int, float], item: str) -> Union[int, None]:
+def cal_iaqi_usa(conc: Union[int, float], item: str) -> Union[int, None]:
     """
     计算单项空气质量指数 (IAQI)
 
@@ -145,20 +145,20 @@ def cal_aqi_usa(
             - IAQI: 各污染物的IAQI值字典
     """
     # 使用cal_iaqi_usa计算各污染物的IAQI
-    pm25_iaqi = _calculate_iaqi(pm25, "PM25_24H")
-    pm10_iaqi = _calculate_iaqi(pm10, "PM10_24H")
-    so2_1h_iaqi = _calculate_iaqi(so2_1h, "SO2_1H")
-    so2_24h_iaqi = _calculate_iaqi(so2_24h, "SO2_24H")
+    pm25_iaqi = cal_iaqi_usa(pm25, "PM25_24H")
+    pm10_iaqi = cal_iaqi_usa(pm10, "PM10_24H")
+    so2_1h_iaqi = cal_iaqi_usa(so2_1h, "SO2_1H")
+    so2_24h_iaqi = cal_iaqi_usa(so2_24h, "SO2_24H")
     # 取 SO2 1小时和24小时 IAQI 的最大值
     so2_iaqi = (
         max(filter(None, [so2_1h_iaqi, so2_24h_iaqi]))
         if any([so2_1h_iaqi, so2_24h_iaqi])
         else None
     )
-    no2_iaqi = _calculate_iaqi(no2, "NO2_1H")
-    co_iaqi = _calculate_iaqi(co, "CO_8H")
-    o3_8h_iaqi = _calculate_iaqi(o3_8h, "O3_8H")
-    o3_1h_iaqi = _calculate_iaqi(o3_1h, "O3_1H")
+    no2_iaqi = cal_iaqi_usa(no2, "NO2_1H")
+    co_iaqi = cal_iaqi_usa(co, "CO_8H")
+    o3_8h_iaqi = cal_iaqi_usa(o3_8h, "O3_8H")
+    o3_1h_iaqi = cal_iaqi_usa(o3_1h, "O3_1H")
     # 取 O3 8小时和1小时 IAQI 的最大值
     o3_iaqi = (
         max(filter(None, [o3_8h_iaqi, o3_1h_iaqi]))

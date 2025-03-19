@@ -1,10 +1,10 @@
 """
-测试 AQI_USA 计算模块中的 _calculate_iaqi 函数
+测试 AQI_USA 计算模块中的 cal_iaqi_usa 函数
 """
 
 import pytest
 
-from aqi_hub.aqi_usa.aqi import _calculate_iaqi
+from aqi_hub.aqi_usa.aqi import cal_iaqi_usa
 
 
 @pytest.mark.parametrize(
@@ -22,7 +22,7 @@ from aqi_hub.aqi_usa.aqi import _calculate_iaqi
 )
 def test_none_concentration(conc, item, expected):
     """测试浓度值为 None 的情况"""
-    assert _calculate_iaqi(conc, item) == expected
+    assert cal_iaqi_usa(conc, item) == expected
 
 
 @pytest.mark.parametrize(
@@ -95,9 +95,9 @@ def test_none_concentration(conc, item, expected):
         (0.604, "O3_1H", 500),  # AQI 500
     ],
 )
-def test_calculate_iaqi_normal(conc, item, expected):
+def testcal_iaqi_usa_normal(conc, item, expected):
     """测试正常情况下的线性插值计算"""
-    assert _calculate_iaqi(conc, item) == expected
+    assert cal_iaqi_usa(conc, item) == expected
 
 
 @pytest.mark.parametrize(
@@ -128,10 +128,10 @@ def test_calculate_iaqi_normal(conc, item, expected):
         (-1, "PM10_24H", "No suitable interval found", None),
     ],
 )
-def test_calculate_iaqi_warnings(conc, item, warning_msg, expected):
+def testcal_iaqi_usa_warnings(conc, item, warning_msg, expected):
     """测试会触发警告的特殊情况"""
     with pytest.warns(UserWarning, match=warning_msg):
-        assert _calculate_iaqi(conc, item) == expected
+        assert cal_iaqi_usa(conc, item) == expected
 
 
 @pytest.mark.parametrize(
@@ -140,10 +140,10 @@ def test_calculate_iaqi_warnings(conc, item, warning_msg, expected):
         (100, "INVALID_POLLUTANT", "item: .* must be one of dict_keys"),
     ],
 )
-def test_calculate_iaqi_errors(conc, item, error_msg):
+def testcal_iaqi_usa_errors(conc, item, error_msg):
     """测试会触发错误的情况"""
     with pytest.raises(ValueError, match=error_msg):
-        _calculate_iaqi(conc, item)
+        cal_iaqi_usa(conc, item)
 
 
 if __name__ == "__main__":
