@@ -2,7 +2,7 @@
 
 ![AQI Hub Cover](docs/cover.jpeg)
 
-aqi 计算，以及分指数计算  
+AQI 计算，以及分指数计算  
 
 ## 计算方法
 

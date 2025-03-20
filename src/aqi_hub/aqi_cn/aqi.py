@@ -145,7 +145,7 @@ def cal_aqi_cn(
             - "daily": 使用日均值计算 (O3 使用 8 小时滑动平均)
 
     Returns:
-        Tuple[Optional[int], Dict[str, Optional[int]]]: 
+        Tuple[Optional[int], Dict[str, Optional[int]]]:
             - 第一个元素为 AQI 值 (整数或 None)
                 - 当所有 IAQI 值都为 None 时返回 None
                 - 当有有效的 IAQI 值时返回最大值
@@ -295,7 +295,7 @@ def get_aqi_level_color(
     Returns:
         Union[str, Tuple[int, int, int], Tuple[int, int, int, int]]:
             根据 color_type 返回对应格式的颜色值
-    
+
     Raises:
         ValueError: 当 aqi_level 不在 1-6 范围内，或 color_type 不是有效值时
     """
@@ -361,11 +361,23 @@ class AQI:
     def get_aqi(self) -> int:
         if self.data_type == "hourly":
             return cal_aqi_cn(
-                self.pm25, self.pm10, self.so2, self.no2, self.co, self.o3, self.data_type
+                self.pm25,
+                self.pm10,
+                self.so2,
+                self.no2,
+                self.co,
+                self.o3,
+                self.data_type,
             )
         elif self.data_type == "daily":
             return cal_aqi_cn(
-                self.pm25, self.pm10, self.so2, self.no2, self.co, self.o3, self.data_type
+                self.pm25,
+                self.pm10,
+                self.so2,
+                self.no2,
+                self.co,
+                self.o3,
+                self.data_type,
             )
         else:
             raise ValueError("data_type must be 'hourly' or 'daily'")

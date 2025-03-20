@@ -1,5 +1,22 @@
+.PHONY: help build fmt lint sync lock upgrade all test
+
 export UV_PYTHON_PREFERENCE=only-system
 export PYTHONPATH := $(shell pwd)
+
+help:
+	@echo "Usage: make [target]"
+	@echo "Targets:"
+	@echo "  build       Build the project"
+	@echo "  fmt         Format the code"
+	@echo "  lint        Lint the code"
+	@echo "  sync        Sync the dependencies"
+	@echo "  lock        Lock the dependencies"
+	@echo "  upgrade     Upgrade the dependencies"
+	@echo "  all         Build, format, lint, sync, lock, and upgrade"
+	@echo "  test        Run the tests"
+	
+build:
+	uv build --no-sources
 
 fmt:
 	uv run ruff check --select I --fix .
