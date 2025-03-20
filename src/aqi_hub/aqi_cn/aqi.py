@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 from aqi_hub.aqi_cn.common import AQI_COLOR, AQI_LEVEL, POLLUTANT_MAP, breakpoints
 
 
-def cal_iaqi_usa(concentration: float, breakpoints: dict[str:List]) -> float:
+def _cal_iaqi_cn(concentration: float, breakpoints: dict[str:List]) -> float:
     """
     计算单项空气质量指数 (IAQI)
 
@@ -43,7 +43,7 @@ def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
         warnings.warn(f"value is greater than 800 for {item}")
         return None
     else:
-        iaqi = cal_iaqi_usa(value, breakpoints[item])
+        iaqi = _cal_iaqi_cn(value, breakpoints[item])
     if iaqi is not None:
         iaqi = math.ceil(iaqi)
     return iaqi
