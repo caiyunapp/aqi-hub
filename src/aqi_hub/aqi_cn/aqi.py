@@ -1,4 +1,5 @@
 import math
+import warnings
 from typing import Dict, List, Optional, Tuple, Union
 
 from aqi_hub.aqi_cn.common import AQI_COLOR, AQI_LEVEL, POLLUTANT_MAP, breakpoints
@@ -20,20 +21,26 @@ def cal_iaqi_usa(concentration: float, breakpoints: dict[str:List]) -> float:
     return 500.0  # 如果超出范围，可以返回500
 
 
-def cal_iaqi_cn(item: str, value: Union[int, float]) -> Optional[int]:
+def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
     """计算单项污染物的IAQI
 
     PM2.5和PM10无逐小时的IAQI计算方法，直接采用24小时的浓度限值计算
     """
+    if value is None:
+        warnings.warn(f"value is None for {item}")
+        return None
     if not isinstance(value, (int, float)):
         raise TypeError("value must be int or float")
     if value < 0:
-        raise ValueError("value must be greater than or equal to 0")
+        warnings.warn(f"value is less than 0 for {item}")
+        return None
     if item not in breakpoints:
         raise ValueError(f"item must be one of {breakpoints.keys()}")
     if item == "SO2_1H" and value > 800:
+        warnings.warn(f"value is greater than 800 for {item}")
         return None
     elif item == "O3_8H" and value > 800:
+        warnings.warn(f"value is greater than 800 for {item}")
         return None
     else:
         iaqi = cal_iaqi_usa(value, breakpoints[item])
@@ -78,7 +85,8 @@ def cal_aqi_cn_hourly(
         "CO": co_iaqi,
         "O3": o3_iaqi,
     }
-    aqi = max(pm25_iaqi, pm10_iaqi, so2_iaqi, no2_iaqi, co_iaqi, o3_iaqi)
+    iaqi_values = [v for v in iaqi.values() if v is not None]
+    aqi = max(iaqi_values) if iaqi_values else None
     return aqi, iaqi
 
 
@@ -113,7 +121,8 @@ def cal_aqi_cn_daily(
         "CO": co_iaqi,
         "O3": o3_iaqi,
     }
-    aqi = max(pm25_iaqi, pm10_iaqi, so2_iaqi, no2_iaqi, co_iaqi, o3_iaqi)
+    iaqi_values = [v for v in iaqi.values() if v is not None]
+    aqi = max(iaqi_values) if iaqi_values else None
     return aqi, iaqi
 
 
@@ -126,9 +135,15 @@ def cal_primary_pollutant(iaqi: Dict[str, int]) -> List[str]:
     Returns:
         首要污染物
     """
+    if not isinstance(iaqi, dict):
+        raise TypeError("iaqi must be a dictionary")
     primary_pollutant = []
-    for item, value in iaqi.items():
-        if value > 50:
+    valid_values = {k: v for k, v in iaqi.items() if v is not None}
+    if not valid_values:
+        return primary_pollutant
+    max_iaqi = max(valid_values.values())
+    for item, value in valid_values.items():
+        if value > 50 and value == max_iaqi:
             primary_pollutant.append(item)
     return primary_pollutant
 
@@ -142,14 +157,16 @@ def cal_exceed_pollutant(iaqi: Dict[str, int]) -> List[str]:
     Returns:
         超标污染物
     """
+    if not isinstance(iaqi, dict):
+        raise TypeError("iaqi must be a dictionary")
     exceed_pollutant = []
     for item, value in iaqi.items():
-        if value > 100:
+        if value is not None and value > 100:
             exceed_pollutant.append(item)
     return exceed_pollutant
 
 
-def get_aqi_level(aqi: int) -> int:
+def get_aqi_level(aqi: Union[int, None]) -> Union[int, None]:
     """获取中国标准下的AQI等级
 
     Args:
@@ -158,6 +175,11 @@ def get_aqi_level(aqi: int) -> int:
     Returns:
         AQI等级
     """
+    if aqi is None:
+        warnings.warn("AQI is None")
+        return None
+    if not isinstance(aqi, (int, float)):
+        raise ValueError("AQI must be a number")
     if aqi < 0 or aqi > 500:
         raise ValueError("AQI must be between 0 and 500")
     if aqi <= 50:

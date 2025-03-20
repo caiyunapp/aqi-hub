@@ -17,7 +17,7 @@ from aqi_hub.aqi_usa.common import (
 )
 
 
-def cal_iaqi_usa(conc: Union[int, float], item: str) -> Union[int, None]:
+def cal_iaqi_usa(conc: Union[None, int, float], item: str) -> Union[None, int]:
     """
     计算单项空气质量指数 (IAQI)
 
@@ -31,6 +31,7 @@ def cal_iaqi_usa(conc: Union[int, float], item: str) -> Union[int, None]:
     if item not in breakpoints:
         raise ValueError(f"item: {item} must be one of {breakpoints.keys()}")
     if conc is None:
+        warnings.warn(f"conc is None for {item}")
         return None
     bk_points = breakpoints[item]
     _min, _max = minmaxs[item]
@@ -126,7 +127,7 @@ def cal_aqi_usa(
     o3_8h: float,
     so2_24h: float = None,
     o3_1h: float = None,
-) -> Tuple[int, Dict[str, int]]:
+) -> Tuple[Union[int, None], Dict[str, Union[int, None]]]:
     """计算美国AQI
 
     Args:
@@ -222,12 +223,11 @@ def cal_primary_pollutant(iaqi: Dict[str, int]) -> List[str]:
         首要污染物列表
     """
     if not iaqi:
-        raise ValueError("IAQI字典不能为空")
+        warnings.warn("IAQI字典为空")
+        return []
 
     # 检查是否所有值都为None
     if all(value is None for value in iaqi.values()):
-        import warnings
-
         warnings.warn("所有污染物IAQI值均为None")
         return []
 

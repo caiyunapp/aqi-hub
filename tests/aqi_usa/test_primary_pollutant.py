@@ -52,17 +52,18 @@ def test_cal_primary_pollutant_valid(iaqi_dict, expected_pollutants):
     assert sorted(result) == sorted(expected_pollutants)
 
 
-@pytest.mark.parametrize(
-    "invalid_iaqi,error_message",
-    [
-        ({}, "IAQI字典不能为空"),
-    ],
-    ids=["empty_dict"],
-)
-def test_cal_primary_pollutant_invalid(invalid_iaqi, error_message):
-    """测试计算首要污染物的异常情况"""
-    with pytest.raises(ValueError, match=error_message):
-        cal_primary_pollutant(invalid_iaqi)
+def test_cal_primary_pollutant_empty_dict():
+    """测试空字典情况下的警告"""
+    with pytest.warns(UserWarning, match="IAQI字典为空"):
+        result = cal_primary_pollutant({})
+        assert result == []
+
+
+def test_cal_primary_pollutant_all_none():
+    """测试所有值为None的情况下的警告"""
+    with pytest.warns(UserWarning, match="所有污染物IAQI值均为None"):
+        result = cal_primary_pollutant({"PM2.5": None, "PM10": None, "SO2": None})
+        assert result == []
 
 
 if __name__ == "__main__":
