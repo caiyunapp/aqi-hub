@@ -10,8 +10,8 @@ keywords = ["aqi", "air quality"]
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn"
-Issues = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn/issues"
+Homepage = "https://github.com/caiyunapp/aqi-hub"
+Issues = "https://github.com/caiyunapp/aqi-hub/issues"
 
 [dependency-groups]
 dev = ["pytest", "ruff"]
