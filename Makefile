@@ -2,6 +2,7 @@
 
 export UV_PYTHON_PREFERENCE=only-system
 export PYTHONPATH := $(shell pwd)
+export PYTHON := python3
 
 help:
 	@echo "Usage: make [target]"
