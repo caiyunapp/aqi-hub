@@ -2,7 +2,16 @@
 name = "aqi-hub"
 
 description = "Air quality index hub"
-authors = [{ name = "Water Ghost", email = "maxlee1991zyz@gmail.com" }]
+maintainers = [
+    { name = "caiyunapp", email = "oss@caiyunapp.com" },
+    { name = "Water Ghost", email = "maxlee1991zyz@gmail.com" },
+    { name = "ringsaturn", email = "ringsaturn.me@gmail.com" },
+]
+authors = [
+    { name = "caiyunapp", email = "oss@caiyunapp.com" },
+    { name = "Water Ghost", email = "maxlee1991zyz@gmail.com" },
+    { name = "ringsaturn", email = "ringsaturn.me@gmail.com" },
+]
 readme = "README.md"
 requires-python = ">=3.10"
 keywords = ["aqi", "air quality"]
