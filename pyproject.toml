@@ -25,5 +25,11 @@ packages = ["src/aqi_hub"]
 include = ["src/aqi_hub/**/*.py", "LICENSE", "README.md"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+# [tool.hatch-vcs]
+# version-scheme = "post-release"
+
+[tool.hatch.version]
+source = "vcs"
