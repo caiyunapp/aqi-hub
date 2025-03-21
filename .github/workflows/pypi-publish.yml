@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: PyPI
-      url: https://pypi.org/p/cyeva
+      url: https://pypi.org/p/aqi-hub
     permissions:
       id-token: write
     env:
