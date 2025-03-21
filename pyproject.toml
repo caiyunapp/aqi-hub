@@ -1,6 +1,6 @@
 [project]
 name = "aqi-hub"
-version = "0.1.0"
+
 description = "Air quality index hub"
 authors = [{ name = "Water Ghost", email = "maxlee1991zyz@gmail.com" }]
 readme = "README.md"
@@ -8,6 +8,8 @@ requires-python = ">=3.10"
 keywords = ["aqi", "air quality"]
 
 dependencies = []
+
+dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/caiyunapp/aqi-hub"
@@ -20,11 +22,7 @@ dev = ["pytest", "ruff"]
 packages = ["src/aqi_hub"]
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "src/aqi_hub/**/*.py",
-    "LICENSE",
-    "README.md",
-]
+include = ["src/aqi_hub/**/*.py", "LICENSE", "README.md"]
 
 [build-system]
 requires = ["hatchling"]
