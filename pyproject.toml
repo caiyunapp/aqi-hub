@@ -1,13 +1,10 @@
-
 [project]
 name = "aqi-hub"
-version = "0.1.0.dev4"
+version = "0.1.0"
 description = "Air quality index hub"
-authors = [
-    {name = "Water Ghost", email = "maxlee1991zyz@gmail.com"},
-]
+authors = [{ name = "Water Ghost", email = "maxlee1991zyz@gmail.com" }]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 keywords = ["aqi", "air quality"]
 
 dependencies = []
@@ -17,19 +14,18 @@ Homepage = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn"
 Issues = "https://github.com/Water-Ghost/aqi-hub/tree/add_aqi_cn/issues"
 
 [dependency-groups]
-dev = [
-    "pytest",
-    "ruff",
+dev = ["pytest", "ruff"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aqi_hub"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/aqi_hub/**/*.py",
+    "LICENSE",
+    "README.md",
 ]
 
-[tool.setuptools]
-license-files = ["LICENSE"]
-
 [build-system]
-requires = ["setuptools", "wheel", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
-
-# [[tool.uv.index]]
-# name = "aqi-hub"
-# url = "https://pypi.org/project/aqi-hub/"
-# publish-url = "https://aqi-hub.pypi.org/legacy/"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

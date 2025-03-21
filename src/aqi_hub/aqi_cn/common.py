@@ -1,7 +1,28 @@
-import math
-from typing import Optional, Union
+"""
+AQI_CN 公共配置文件
 
-# 分段标准，格式为列表 [(BP_lo, BP_hi, IAQI_lo, IAQI_hi)
+"""
+
+AQI_LEVEL = [1, 2, 3, 4, 5, 6]
+POLLUTANT = [
+    "PM2.5",
+    "PM10",
+    "SO2",
+    "NO2",
+    "CO",
+    "O3",
+]
+POLLUTANT_CN = [
+    "细颗粒物",
+    "可吸入颗粒物",
+    "二氧化硫",
+    "二氧化氮",
+    "一氧化碳",
+    "臭氧",
+]
+POLLUTANT_MAP = dict(zip(POLLUTANT, POLLUTANT_CN))
+
+# 分段标准，格式为列表 [(BP_lo, BP_hi, IAQI_lo, IAQI_hi)]
 # 定义 PM2.5 的分段标准
 pm25_breakpoints = [
     (0, 35, 0, 50),  # 优
@@ -12,6 +33,7 @@ pm25_breakpoints = [
     (250, 350, 300, 400),  # 严重污染
     (350, 500, 400, 500),  # 极度污染
 ]
+
 # 定义 PM10 的分段标准
 pm10_breakpoints = [
     (0, 50, 0, 50),  # 优
@@ -22,6 +44,7 @@ pm10_breakpoints = [
     (420, 500, 300, 400),  # 严重污染
     (500, 600, 400, 500),  # 极度污染
 ]
+
 # 定义 SO2 的分段标准
 so2_24h_breakpoints = [
     (0, 150, 0, 50),  # 优
@@ -32,12 +55,14 @@ so2_24h_breakpoints = [
     (1600, 2100, 300, 400),  # 严重污染
     (2100, 2620, 400, 500),  # 极度污染
 ]
+
 so2_1h_breakpoints = [
     (0, 150, 0, 50),  # 优
     (150, 500, 50, 100),  # 良
     (500, 650, 100, 150),  # 轻度污染
     (650, 800, 150, 200),  # 中度污染
 ]
+
 # 定义 NO2 的分段标准
 no2_24h_breakpoints = [
     (0, 40, 0, 50),  # 优
@@ -48,6 +73,7 @@ no2_24h_breakpoints = [
     (565, 750, 300, 400),  # 严重污染
     (750, 940, 400, 500),  # 极度污染
 ]
+
 no2_1h_breakpoints = [
     (0, 100, 0, 50),
     (100, 200, 50, 100),
@@ -57,6 +83,7 @@ no2_1h_breakpoints = [
     (2340, 3090, 300, 400),
     (3090, 3840, 400, 500),
 ]
+
 # 定义 CO 的分段标准
 co_1h_breakpoints = [
     (0, 5, 0, 50),  # 优
@@ -67,6 +94,7 @@ co_1h_breakpoints = [
     (90, 120, 300, 400),  # 严重污染
     (120, 150, 400, 500),  # 极度污染
 ]
+
 co_24h_breakpoints = [
     (0, 2, 0, 50),  # 优
     (2, 4, 50, 100),  # 良
@@ -76,6 +104,7 @@ co_24h_breakpoints = [
     (36, 48, 300, 400),  # 严重污染
     (48, 60, 400, 500),  # 极度污染
 ]
+
 # 定义 O3 的分段标准
 # 臭氧 1小时 IAQI 分段标准
 o3_1hr_breakpoints = [
@@ -96,6 +125,7 @@ o3_8hr_breakpoints = [
     (215, 265, 150, 200),
     (265, 800, 200, 300),
 ]
+
 breakpoints = {
     "PM25_24H": pm25_breakpoints,
     "PM25_1H": pm25_breakpoints,
@@ -111,48 +141,83 @@ breakpoints = {
     "O3_1H": o3_1hr_breakpoints,
 }
 
+# AQI DESCRIPTION
+AQI_NAME = {
+    1: "一级",
+    2: "二级",
+    3: "三级",
+    4: "四级",
+    5: "五级",
+    6: "六级",
+}
 
-def _calculate_iaqi(concentration, breakpoints) -> float:
-    """
-    计算单项空气质量指数 (IAQI)
+AQI_DESC = {
+    1: "优",
+    2: "良",
+    3: "轻度污染",
+    4: "中度污染",
+    5: "重度污染",
+    6: "严重污染",
+}
 
-    :param concentration: 污染物浓度值 (float)
-    :param breakpoints: 分段标准，格式为列表 [(BP_lo, BP_hi, IAQI_lo, IAQI_hi), ...]
-    :return: 对应的 IAQI 值 (float)
-    """
-    for bp_lo, bp_hi, iaqi_lo, iaqi_hi in breakpoints:
-        if bp_lo <= concentration <= bp_hi:
-            return ((iaqi_hi - iaqi_lo) / (bp_hi - bp_lo)) * (
-                concentration - bp_lo
-            ) + iaqi_lo
-    return 500.0  # 如果超出范围，可以返回500
+AQI_COLOR_NAME = {
+    1: "绿色",
+    2: "黄色",
+    3: "橙色",
+    4: "红色",
+    5: "紫色",
+    6: "褐红色",
+}
 
+AQI_COLOR = {
+    "RGB": {
+        1: (0, 228, 0),
+        2: (255, 255, 0),
+        3: (255, 126, 0),
+        4: (255, 0, 0),
+        5: (153, 0, 76),
+        6: (126, 0, 35),
+    },
+    "CMYK": {
+        1: (40, 0, 100, 0),
+        2: (0, 0, 100, 0),
+        3: (0, 52, 100, 0),
+        4: (0, 100, 100, 0),
+        5: (10, 100, 40, 30),
+        6: (30, 100, 100, 30),
+    },
+    "RGB_HEX": {
+        1: "#00E400",
+        2: "#FFFF00",
+        3: "#FF7E00",
+        4: "#FF0000",
+        5: "#99004C",
+        6: "#7E0023",
+    },
+    "CMYK_HEX": {
+        1: "#99FF00",
+        2: "#FFFF00",
+        3: "#FF7A00",
+        4: "#FF0000",
+        5: "#A0006B",
+        6: "#7C0000",
+    },
+}
 
-def cal_iaqi_cn(item: str, value: Union[int, float]) -> Optional[int]:
-    """计算单项污染物的IAQI
+AQI_HEALTH_EFFECT = {
+    1: "空气质量令人满意，基本无空气污染",
+    2: "空气质量可接受，但某些污染物可能对极少数异常敏感人群健康有较弱影响",
+    3: "易感人群症状有轻度加剧，健康人群出现刺激症状",
+    4: "进一步加剧易感人群症状，可能对健康人群心脏、呼吸系统有影响",
+    5: "心脏病和肺病患者症状显著加剧，运动耐受力降低，健康人群普遍出现症状",
+    6: "健康人群运动耐受力降低，有明显强烈症状，提前出现某些疾病",
+}
 
-    https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf
-    http://sthjj.wuhai.gov.cn/sthjj/1115793/1115792/hbxw/1195969/index.html
-    PM2.5和PM10无逐小时的IAQI计算方法，直接采用24小时的浓度限值计算
-    """
-    if not isinstance(value, (int, float)):
-        raise TypeError("value must be int or float")
-    if value < 0:
-        raise ValueError("value must be greater than or equal to 0")
-    if item not in breakpoints:
-        raise ValueError(f"item must be one of {breakpoints.keys()}")
-    if item == "SO2_1H" and value > 800:
-        return None
-    elif item == "O3_8H" and value > 800:
-        return None
-    else:
-        iaqi = _calculate_iaqi(value, breakpoints[item])
-    if iaqi is not None:
-        iaqi = math.ceil(iaqi)
-    return iaqi
-
-
-if __name__ == "__main__":
-    print(cal_iaqi_cn("PM25_24H", 35))
-    print(cal_iaqi_cn("PM25_1H", 501))
-    print(cal_iaqi_cn("O3_8H", 801))
+AQI_MESSURE = {
+    1: "各类人群可正常活动",
+    2: "极少数异常敏感人群应减少户外活动",
+    3: "儿童、老年人及心脏病、呼吸系统疾病患者应减少长时间、高强度户外锻炼",
+    4: "儿童、老年人及心脏病、呼吸系统疾病患者避免长时间、高强度户外锻炼，一般人群适量减少户外运动",
+    5: "儿童、老年人和心脏病、肺病患者应停留在室内，停止户外运动，一般人群减少户外运动",
+    6: "儿童、老年人和病人应当留在室内，避免体力消耗，一般人群停止户外运动",
+}
