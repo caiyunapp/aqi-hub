@@ -120,7 +120,7 @@ def testcal_iaqi_usa_normal(conc, item, expected):
         (
             304,
             "SO2_24H",
-            "24-hr SO2 concentrations do not define higher AQI values",
+            "24-hr SO2 concentrations do not define lower AQI values",
             None,
         ),
         # 超出范围的值

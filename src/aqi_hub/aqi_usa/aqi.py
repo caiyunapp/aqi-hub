@@ -80,8 +80,8 @@ def cal_iaqi_usa(conc: Union[None, int, float], item: str) -> Union[None, int]:
             # 二氧化硫24小时浓度 < 305 ppb, 无数据. 应该用 二氧化硫1小时 的浓度值
             if conc < singularity:
                 warnings.warn(
-                    "24-hr SO2 concentrations do not define higher AQI values (≥300). "
-                    "AQI values of 300 or greater are calculated with 1-hour SO2 concentration"
+                    "24-hr SO2 concentrations do not define lower AQI values (<200). "
+                    "AQI values of 200 or greater are calculated with 1-hour SO2 concentration"
                 )
                 return None
             elif conc >= _max:
