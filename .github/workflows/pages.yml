@@ -44,6 +44,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Fetch gh-pages (CI 浅克隆需先拉取，否则 mike 无法正确合并/推送)
+        run: git fetch origin gh-pages --depth=1 || true
+
       - name: Deploy latest (on main or manual run)
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |

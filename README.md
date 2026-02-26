@@ -10,7 +10,7 @@
 
 AQI 计算，以及分指数计算  
 
-**文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)（多版本由 [mike](https://github.com/jimporter/mike) 维护，根路径为 `latest`，历史版本见 `/0.2.1/`、`/0.3.0/` 等）  
+**文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)（多版本由 [mike](https://github.com/jimporter/mike) 维护，根路径会跳转到 `latest`；直接访问 [latest](https://caiyunapp.github.io/aqi-hub/latest/) 或 `/0.2.1/`、`/0.3.0/` 等）  
 **PyPI 项目页**：[https://pypi.org/project/aqi-hub/](https://pypi.org/project/aqi-hub/)  
 本地预览文档：`make docs-serve`（单页）；多版本预览：`make docs-serve-versioned`（需先 `uv sync --group dev`）
 
