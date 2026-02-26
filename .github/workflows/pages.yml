@@ -50,7 +50,8 @@ jobs:
       - name: Deploy latest (on main or manual run)
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         run: |
-          uv run mike deploy main latest --push --update-aliases --alias-type=copy
+          uv run mike delete latest --push --ignore-remote-status 2>/dev/null || true
+          uv run mike deploy latest --push --update-aliases
           uv run mike set-default latest --push
 
       - name: Deploy version (on tag v*)
