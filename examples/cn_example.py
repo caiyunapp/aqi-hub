@@ -65,11 +65,11 @@
 # print(f"AQI 等级颜色: {color}")
 
 # # 5 主要污染物
-# from aqi_hub.aqi_cn.aqi import cal_exceed_pollutant, cal_primary_pollutant
+# from aqi_hub.aqi_cn.aqi import cal_primary_pollutant
 
-# # 5.1 计算主要污染物
+# # 5.1 计算首要污染物
 # iaqi = {
-#     "PM25": 120,
+#     "PM2.5": 120,
 #     "PM10": 180,
 #     "SO2": 65,
 #     "NO2": 150,
@@ -77,11 +77,7 @@
 #     "O3": 200,
 # }
 # primary_pollutant = cal_primary_pollutant(iaqi)
-# print(f"主要污染物: {primary_pollutant}")
-
-# # 5.2 计算超标污染物
-# exceed_pollutant = cal_exceed_pollutant(iaqi)
-# print(f"超标污染物: {exceed_pollutant}")
+# print(f"首要污染物: {primary_pollutant}")
 
 # # 6 AQI 类
 
@@ -103,7 +99,6 @@
 # print(f"AQI: {aqi_obj.AQI}")
 # print(f"IAQI: {aqi_obj.IAQI}")
 # print(f"主要污染物: {aqi_obj.primary_pollutant}")
-# print(f"超标污染物: {aqi_obj.exceed_pollutant}")
 # print(f"AQI 等级: {aqi_obj.aqi_level}")
 # print(f"AQI 等级颜色 (RGB): {aqi_obj.aqi_color_rgb}")
 # print(f"AQI 等级颜色 (CMYK): {aqi_obj.aqi_color_cmyk}")
@@ -113,8 +108,7 @@
 # """
 # AQI: 158
 # IAQI: {'PM2.5': 158, 'PM10': 115, 'SO2': 22, 'NO2': 135, 'CO': 25, 'O3': 137}
-# 主要污染物: ['PM2.5']
-# 超标污染物: ['PM2.5', 'PM10', 'NO2', 'O3']
+# 首要污染物: ['PM2.5']
 # AQI 等级: 4
 # AQI 等级颜色 (RGB): (255, 0, 0)
 # AQI 等级颜色 (CMYK): (0, 100, 100, 0)

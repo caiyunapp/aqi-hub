@@ -6,14 +6,14 @@ from aqi_hub.aqi_cn.aqi import cal_aqi_cn
 
 
 def test_cal_aqi_cn_hourly_normal():
-    """测试正常的小时值 AQI 计算"""
+    """测试正常的实时报 AQI 计算（小时值 6 项）"""
     aqi, iaqi = cal_aqi_cn(
-        pm25=35,  # IAQI = 50
-        pm10=50,  # IAQI = 50
-        so2=150,  # IAQI = 50
-        no2=100,  # IAQI = 50
-        co=5,  # IAQI = 50
-        o3=160,  # IAQI = 50
+        pm25=35,  # PM25_1H IAQI = 50
+        pm10=50,  # PM10_1H IAQI = 50
+        so2=150,  # SO2_1H IAQI = 50
+        no2=100,  # NO2_1H IAQI = 50
+        co=5,  # CO_1H IAQI = 50
+        o3=160,  # O3_1H IAQI = 50
         data_type="hourly",
     )
     assert aqi == 50
@@ -36,14 +36,14 @@ def test_cal_aqi_cn_daily_normal():
 
 
 def test_cal_aqi_cn_hourly_high():
-    """测试高浓度的小时值 AQI 计算"""
+    """测试高浓度的实时报 AQI 计算（小时值 6 项）"""
     aqi, iaqi = cal_aqi_cn(
-        pm25=250,  # IAQI = 300
-        pm10=350,  # IAQI = 200
-        so2=650,  # IAQI = 150
-        no2=700,  # IAQI = 150
-        co=35,  # IAQI = 150
-        o3=300,  # IAQI = 150
+        pm25=250,  # PM25_1H IAQI = 300
+        pm10=350,  # PM10_1H IAQI = 200
+        so2=650,  # SO2_1H IAQI = 150
+        no2=700,  # NO2_1H IAQI = 150
+        co=35,  # CO_1H IAQI = 150
+        o3=300,  # O3_1H IAQI = 150
         data_type="hourly",
     )
     assert aqi == 300
@@ -68,12 +68,12 @@ def test_cal_aqi_cn_invalid_data_type():
 def test_cal_aqi_cn_negative_values():
     """测试负值输入"""
     aqi, iaqi = cal_aqi_cn(
-        pm25=-1,  # IAQI = None
+        pm25=-1,  # PM25_1H IAQI = None
         pm10=50,  # IAQI = 50
         so2=150,  # IAQI = 50
         no2=100,  # IAQI = 50
         co=5,  # IAQI = 50
-        o3=160,  # IAQI = 50
+        o3=160,  # O3_1H IAQI = 50
         data_type="hourly",
     )
     assert aqi == 50
@@ -81,11 +81,11 @@ def test_cal_aqi_cn_negative_values():
 
 
 def test_cal_aqi_cn_exceed_limits():
-    """测试超出限值的情况（SO2>800 按 IAQI 200 计，O3_8H>800 按 300 计）"""
+    """测试超出限值的情况（SO2_1H>800 按 IAQI 200 计）"""
     aqi, iaqi = cal_aqi_cn(
         pm25=35,  # IAQI = 50
         pm10=50,  # IAQI = 50
-        so2=801,  # IAQI = 200（超过 800 按 200 计）
+        so2=801,  # SO2_1H IAQI = 200（超过 800 按 200 计）
         no2=100,  # IAQI = 50
         co=5,  # IAQI = 50
         o3=-1,  # IAQI = None（负值无效）
