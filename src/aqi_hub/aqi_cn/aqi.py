@@ -1,7 +1,7 @@
 """
 空气质量指数 (AQI) 计算模块
 
-本模块实现了基于中国环境空气质量标准 (GB 3095-2012) 的空气质量指数 (AQI) 计算方法。
+本模块实现了基于中国环境空气质量标准 (GB 3095-2026) 的空气质量指数 (AQI) 计算方法。
 支持计算小时和日均 AQI，以及相关的空气质量评价指标。
 
 主要功能:
@@ -28,8 +28,8 @@
     >>> print(f"颜色 (RGB): {aqi.aqi_color_rgb}")
 
 参考标准:
-    GB 3095-2012 环境空气质量标准
-    HJ 633-2012 环境空气质量指数 (AQI) 技术规定
+    GB 3095-2026 环境空气质量标准
+    HJ 633-2012 / HJ 633-2026 环境空气质量指数 (AQI) 技术规定
 """
 
 import math
@@ -70,7 +70,9 @@ def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
 
     根据污染物类型和浓度值计算对应的 IAQI。
     PM2.5 和 PM10 无逐小时的 IAQI 计算方法, 直接采用 24 小时的浓度限值计算。
-    SO2_1H 和 O3_8H 的浓度限值为 800 μg/m³, 超出 800 μg/m³ 时, IAQI 取 500。
+    SO2_1H 和 O3_8H 的浓度限值为 800 μg/m³：
+    - SO2_1H 超过 800 μg/m³ 时，IAQI 按 200 计；
+    - O3_8H 超过 800 μg/m³ 时，IAQI 按 300 计。
 
     Args:
         item: 污染物名称, 可选值为:
@@ -94,7 +96,8 @@ def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
         Optional[int]: IAQI 值。当输入值无效时返回 None
             - 当 value 为 None 时返回 None
             - 当 value 小于 0 时返回 None
-            - 当 SO2_1H 或 O3_8H 浓度超过 800 μg/m³ 时返回 None
+            - 当 SO2_1H 浓度超过 800 μg/m³ 时返回 200（IAQI 封顶）
+            - 当 O3_8H 浓度超过 800 μg/m³ 时返回 300（IAQI 封顶）
     """
     if value is None:
         warnings.warn(f"value is None for {item}")
@@ -107,13 +110,10 @@ def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
     if item not in breakpoints:
         raise ValueError(f"item must be one of {breakpoints.keys()}")
     if item == "SO2_1H" and value > 800:
-        warnings.warn(f"value is greater than 800 for {item}")
-        return None
-    elif item == "O3_8H" and value > 800:
-        warnings.warn(f"value is greater than 800 for {item}")
-        return None
-    else:
-        iaqi = _cal_iaqi_cn(value, breakpoints[item])
+        return 200  # 超过 800 时 IAQI 按 200 计（依据 HJ 633-2026）
+    if item == "O3_8H" and value > 800:
+        return 300  # 超过 800 时 IAQI 按 300 计（依据 HJ 633-2026）
+    iaqi = _cal_iaqi_cn(value, breakpoints[item])
     if iaqi is not None:
         iaqi = math.ceil(iaqi)
     return iaqi
