@@ -8,7 +8,8 @@ from aqi_hub.aqi_cn.aqi import AQI, cal_iaqi_cn
     [
         (0, 0),
         (35, 50),
-        (75, 100),
+        (60, 100),
+        (75, 114),
         (115, 150),
         (150, 200),
         (250, 300),
@@ -28,7 +29,8 @@ def test_pm25(value, expected, item):
     [
         (0, 0),
         (50, 50),
-        (150, 100),
+        (120, 100),
+        (150, 112),
         (250, 150),
         (350, 200),
         (420, 300),
@@ -70,10 +72,10 @@ def test_so2_24h(value, expected, item):
         (500, 100),
         (650, 150),
         (800, 200),
-        (1600, None),
-        (2100, None),
-        (2620, None),
-        (3000, None),
+        (1600, 200),
+        (2100, 200),
+        (2620, 200),
+        (3000, 200),
     ],
 )
 @pytest.mark.parametrize("item", ["SO2_1H"])
@@ -192,9 +194,9 @@ def test_o3_1h(value, expected, item):
         (215, 150),
         (265, 200),
         (800, 300),
-        (1000, None),
-        (1200, None),
-        (1500, None),
+        (1000, 300),
+        (1200, 300),
+        (1500, 300),
     ],
 )
 @pytest.mark.parametrize("item", ["O3_8H"])
@@ -219,15 +221,10 @@ def test_aqi_class_hourly():
     """测试AQI类的小时值计算"""
     aqi = AQI(pm25=75, pm10=150, so2=500, no2=200, co=10, o3=200, data_type="hourly")
 
-    assert aqi.AQI == 100  # 应该返回最大的IAQI值
+    # 新标准下 PM2.5=75 → IAQI 114（轻度），PM10=150 → 112，其余 100
+    assert aqi.AQI == 114
     assert "PM2.5" in aqi.primary_pollutant
-    assert "PM10" in aqi.primary_pollutant
-    assert "SO2" in aqi.primary_pollutant
-    assert "NO2" in aqi.primary_pollutant
-    assert "CO" in aqi.primary_pollutant
-    assert "O3" in aqi.primary_pollutant
-
-    assert aqi.aqi_level == 2  # AQI在51-100之间，等级为2
+    assert aqi.aqi_level == 3  # 101-150 轻度污染
     assert isinstance(aqi.aqi_color_rgb, tuple)
     assert len(aqi.aqi_color_rgb) == 3
     assert isinstance(aqi.aqi_color_rgb_hex, str)
@@ -256,6 +253,20 @@ def test_aqi_invalid_data_type():
         AQI(pm25=75, pm10=150, so2=500, no2=200, co=10, o3=200, data_type="invalid")
 
 
+def test_hj633_2026_pm_boundaries():
+    """HJ 633-2026：PM2.5 良/轻度界限 60，PM10 良/轻度界限 120"""
+    # PM2.5=59 为良 (IAQI<100)，60 为轻度起算 (IAQI=100)
+    assert cal_iaqi_cn("PM25_1H", 59) == 98  # 良
+    assert cal_iaqi_cn("PM25_1H", 60) == 100  # 轻度下界
+    # PM10=118 为良，120 为轻度起算
+    assert cal_iaqi_cn("PM10_1H", 118) == 99  # 良
+    assert cal_iaqi_cn("PM10_1H", 120) == 100  # 轻度下界
+    # 集成：PM2.5=60 主导时 AQI=100、等级 2（100 仍属良）
+    aqi_60 = AQI(pm25=60, pm10=50, so2=150, no2=100, co=5, o3=160, data_type="hourly")
+    assert aqi_60.AQI == 100
+    assert aqi_60.aqi_level == 2
+
+
 def test_extreme_values():
     """测试极端值情况"""
     # 测试所有污染物浓度都很低的情况
@@ -275,31 +286,31 @@ def test_extreme_values():
 
 def test_aqi_with_none_values():
     """测试AQI计算中包含None值的情况"""
-    # 测试部分污染物为None的情况
+    # 测试 SO2>800 时按 IAQI 200 计
     aqi = AQI(
-        pm25=75,  # 100
-        pm10=None,
+        pm25=75,  # 114
+        pm10=150,  # 112
         so2=800,  # 200
         no2=200,  # 100
         co=None,
         o3=200,  # 100
         data_type="hourly",
     )
-    assert aqi.AQI == 200  # SO2的IAQI为200，应该是最大值
+    assert aqi.AQI == 200  # SO2 的 IAQI 为 200
     assert "SO2" in aqi.primary_pollutant
     assert len(aqi.primary_pollutant) > 0
 
     # 测试关键污染物为None的情况
     aqi = AQI(
-        pm25=75,  # 100
-        pm10=150,  # 100
-        so2=None,  # 原本应该是最大的值变成了None
+        pm25=75,  # 114
+        pm10=150,  # 112
+        so2=None,  # None
         no2=200,  # 100
         co=10,  # 100
         o3=200,  # 100
         data_type="hourly",
     )
-    assert aqi.AQI == 100  # 所有非None的IAQI中的最大值
+    assert aqi.AQI == 114  # 非 None 的 IAQI 最大值
     assert len(aqi.primary_pollutant) > 0
 
     # 测试全部污染物为None的情况
@@ -310,17 +321,17 @@ def test_aqi_with_none_values():
     assert len(aqi.primary_pollutant) == 0
     assert len(aqi.exceed_pollutant) == 0
 
-    # 测试部分污染物超出范围返回None的情况
+    # 测试部分污染物超出范围：SO2>800 现按 IAQI 200 计，O3_1H 超范围仍为 500
     aqi = AQI(
-        pm25=75,  # 100
-        pm10=150,  # 100
-        so2=3000,  # None (超出范围)
+        pm25=75,  # 114
+        pm10=150,  # 112
+        so2=3000,  # 200（超过 800 按 200 计）
         no2=200,  # 100
         co=10,  # 100
-        o3=2000,  # 500 (O3_1H超出范围时返回500)
+        o3=2000,  # 500 (O3_1H 超出范围时返回 500)
         data_type="hourly",
     )
-    assert aqi.AQI == 500  # O3_1H超出范围时返回500，应该是最大值
+    assert aqi.AQI == 500  # O3_1H 主导
     assert "O3" in aqi.primary_pollutant
     assert len(aqi.primary_pollutant) > 0
 

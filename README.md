@@ -1,8 +1,16 @@
 # AQI Hub
 
+[![Tests](https://github.com/caiyunapp/aqi-hub/actions/workflows/test.yml/badge.svg)](https://github.com/caiyunapp/aqi-hub/actions/workflows/test.yml)
+[![PyPI version](https://img.shields.io/pypi/v/aqi-hub)](https://pypi.org/project/aqi-hub/)
+[![Python 3.10+](https://img.shields.io/pypi/pyversions/aqi-hub)](https://pypi.org/project/aqi-hub/)
+[![License: MIT](https://img.shields.io/github/license/caiyunapp/aqi-hub)](https://github.com/caiyunapp/aqi-hub/blob/main/LICENSE)
+[![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://caiyunapp.github.io/aqi-hub/)
+
 ![AQI Hub Cover](docs/cover.jpeg)
 
 AQI 计算，以及分指数计算  
+
+**文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)  
 
 ## Contents
 
@@ -39,7 +47,14 @@ AQI 计算，以及分指数计算
 
 ### AQI (CN)
 
-计算方法参照中华人民共和国生态环境部标准： [HJ 633--2012 环境空气质量指数 （AQI） 技术规定 （试行）.pdf](https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf)
+计算方法参照中华人民共和国生态环境部标准 **GB 3095-2026 环境空气质量标准** 与 **HJ 633-2026 环境空气质量指数（AQI）技术规定（试行）**。
+
+本库实现与 2026 版一致，主要约定包括：
+
+- **PM2.5**：良与轻度污染界限为 60 μg/m³（原 75）
+- **PM10**：良与轻度污染界限为 120 μg/m³（原 150）
+- **SO2 1 小时**：浓度超过 800 μg/m³ 时，IAQI 按 200 计（不再视为无效）
+- **O3 8 小时**：浓度超过 800 μg/m³ 时，IAQI 按 300 计（不再视为无效）
 
 #### AQI 等级说明
 
@@ -223,8 +238,8 @@ print(f"AQI 等级颜色 (RGB_HEX): {aqi_obj.aqi_color_rgb_hex}")
 print(f"AQI 等级颜色 (CMYK_HEX): {aqi_obj.aqi_color_cmyk_hex}")
 
 """
-AQI: 158
-IAQI: {'PM2.5': 158, 'PM10': 115, 'SO2': 22, 'NO2': 135, 'CO': 25, 'O3': 137}
+AQI: 155
+IAQI: {'PM2.5': 155, 'PM10': 124, 'SO2': 22, 'NO2': 135, 'CO': 25, 'O3': 137}
 主要污染物: ['PM2.5']
 超标污染物: ['PM2.5', 'PM10', 'NO2', 'O3']
 AQI 等级: 4
@@ -367,5 +382,6 @@ print("aqi_color_cmyk_hex:", aqi.aqi_color_cmyk_hex)
 
 ## 参考文献
 
-1. [HJ 633--2012 环境空气质量指数 （AQI） 技术规定 （试行）.pdf](https://www.mee.gov.cn/ywgz/fgbz/bz/bzwb/jcffbz/201203/W020120410332725219541.pdf)
-2. [Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf)
+1. [GB 3095-2026 环境空气质量标准](docs/GB_3095-2026_环境空气质量标准.pdf)  
+2. [HJ 633-2026 环境空气质量指数（AQI）技术规定（试行）](docs/HJ_633-2026_环境空气质量指数（AQI）技术规定（试行）.pdf)  
+3. [Technical Assistance Document for the Reporting of Daily Air Quality – the Air Quality Index (AQI)](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf)（美国 EPA）

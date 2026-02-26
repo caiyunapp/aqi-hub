@@ -25,7 +25,12 @@ Homepage = "https://github.com/caiyunapp/aqi-hub"
 Issues = "https://github.com/caiyunapp/aqi-hub/issues"
 
 [dependency-groups]
-dev = ["pytest", "ruff"]
+dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.3",
+    "pytest",
+    "ruff",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/aqi_hub"]

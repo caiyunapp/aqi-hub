@@ -1,0 +1,38 @@
+site_name: AQI Hub
+site_description: AQI 计算与分指数计算
+site_url: https://caiyunapp.github.io/aqi-hub/
+
+repo_url: https://github.com/caiyunapp/aqi-hub
+repo_name: caiyunapp/aqi-hub
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: 深色模式
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: 浅色模式
+
+plugins:
+  - search
+
+nav:
+  - 介绍: index.md
+  - 使用方法: usage.md
+  - 参考文献:
+      - GB 3095-2026: https://github.com/caiyunapp/aqi-hub/blob/main/docs/GB_3095-2026_环境空气质量标准.pdf
+      - HJ 633-2026: https://github.com/caiyunapp/aqi-hub/blob/main/docs/HJ_633-2026_环境空气质量指数（AQI）技术规定（试行）.pdf
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - tables
