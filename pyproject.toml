@@ -28,6 +28,7 @@ Issues = "https://github.com/caiyunapp/aqi-hub/issues"
 dev = [
     "mkdocs>=1.6.1",
     "mkdocs-material>=9.7.3",
+    "mike>=2.0",
     "pytest",
     "ruff",
 ]
