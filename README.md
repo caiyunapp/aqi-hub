@@ -12,7 +12,7 @@ AQI 计算，以及分指数计算
 
 **文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)（多版本由 [mike](https://github.com/jimporter/mike) 维护，根路径为 `latest`，历史版本见 `/0.2.1/`、`/0.3.0/` 等）  
 **PyPI 项目页**：[https://pypi.org/project/aqi-hub/](https://pypi.org/project/aqi-hub/)  
-本地预览文档：`make docs-serve`（单页）；多版本预览（与线上一致的版本选择器）：`make docs-serve-versioned`（需先 `uv sync --group dev`）
+本地预览文档：`make docs-serve`（单页）；多版本预览：`make docs-serve-versioned`（需先 `uv sync --group dev`）
 
 首次使用多版本文档时，请在仓库 **Settings → Pages** 中将 Source 设为 **Deploy from a branch**，Branch 选 **gh-pages**，目录选 **/ (root)**；之后由 workflow 推送到 `gh-pages` 即可发布。  
 
