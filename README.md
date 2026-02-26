@@ -11,6 +11,7 @@
 AQI 计算，以及分指数计算  
 
 **文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)  
+**PyPI 项目页**：[https://pypi.org/project/aqi-hub/](https://pypi.org/project/aqi-hub/)  
 本地预览文档：`make docs-serve`（需先 `uv sync --group dev`）  
 
 ## Contents
