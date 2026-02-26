@@ -419,7 +419,7 @@
   <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. 首要污染物与超标污染物
+        5. 首要污染物
       
     </span>
   </a>
@@ -729,7 +729,7 @@
   <a href="#5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. 首要污染物与超标污染物
+        5. 首要污染物
       
     </span>
   </a>
@@ -887,8 +887,8 @@
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">color</span> <span class="o">=</span> <span class="n">get_aqi_level_color</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;RGB_HEX&quot;</span><span class="p">)</span>  <span class="c1"># &quot;#FF7E00&quot;</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">color</span> <span class="o">=</span> <span class="n">get_aqi_level_color</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;CMYK_HEX&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="5">5. 首要污染物与超标污染物</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">aqi_hub.aqi_cn.aqi</span><span class="w"> </span><span class="kn">import</span> <span class="n">cal_primary_pollutant</span><span class="p">,</span> <span class="n">cal_exceed_pollutant</span>
+<h3 id="5">5. 首要污染物</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">aqi_hub.aqi_cn.aqi</span><span class="w"> </span><span class="kn">import</span> <span class="n">cal_primary_pollutant</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">iaqi</span> <span class="o">=</span> <span class="p">{</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="s2">&quot;PM2.5&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
@@ -899,8 +899,7 @@
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="s2">&quot;O3&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
 <a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="n">primary</span> <span class="o">=</span> <span class="n">cal_primary_pollutant</span><span class="p">(</span><span class="n">iaqi</span><span class="p">)</span>   <span class="c1"># IAQI &gt; 50 且最大的污染物</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">exceed</span> <span class="o">=</span> <span class="n">cal_exceed_pollutant</span><span class="p">(</span><span class="n">iaqi</span><span class="p">)</span>     <span class="c1"># IAQI &gt; 100 的污染物</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;首要污染物: </span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">, 超标污染物: </span><span class="si">{</span><span class="n">exceed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;首要污染物: </span><span class="si">{</span><span class="n">primary</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="6-aqi">6. AQI 类（一站式）</h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">aqi_hub.aqi_cn.aqi</span><span class="w"> </span><span class="kn">import</span> <span class="n">AQI</span>
@@ -917,11 +916,10 @@
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AQI: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">AQI</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;IAQI: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">IAQI</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;首要污染物: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">primary_pollutant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;超标污染物: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">exceed_pollutant</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AQI 等级: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;颜色 RGB: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_color_rgb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;颜色 HEX: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_color_rgb_hex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;中文首要污染物: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">primary_pollutant_cn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;AQI 等级: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;颜色 RGB: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_color_rgb</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;颜色 HEX: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">aqi_color_rgb_hex</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;中文首要污染物: </span><span class="si">{</span><span class="n">aqi_obj</span><span class="o">.</span><span class="n">primary_pollutant_cn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
 <hr />
 <h2 id="aqi_1">美国 AQI 计算</h2>
