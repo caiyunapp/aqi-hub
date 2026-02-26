@@ -1,4 +1,4 @@
-.PHONY: help build fmt lint sync lock upgrade all test
+.PHONY: help build fmt lint sync lock upgrade all test docs-serve
 
 export UV_PYTHON_PREFERENCE=only-system
 export PYTHONPATH := $(shell pwd)
@@ -15,6 +15,7 @@ help:
 	@echo "  upgrade     Upgrade the dependencies"
 	@echo "  all         Build, format, lint, sync, lock, and upgrade"
 	@echo "  test        Run the tests"
+	@echo "  docs-serve  Run MkDocs dev server (uv run mkdocs serve)"
 	
 build:
 	uv build --no-sources
@@ -47,3 +48,6 @@ all: lock sync
 
 test: lint
 	uv run pytest -v .
+
+docs-serve:
+	uv run mkdocs serve
