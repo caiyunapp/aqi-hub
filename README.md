@@ -10,9 +10,11 @@
 
 AQI 计算，以及分指数计算  
 
-**文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)  
+**文档（使用方法）**：[https://caiyunapp.github.io/aqi-hub/](https://caiyunapp.github.io/aqi-hub/)（多版本由 [mike](https://github.com/jimporter/mike) 维护，根路径为 `latest`，历史版本见 `/0.2.1/`、`/0.3.0/` 等）  
 **PyPI 项目页**：[https://pypi.org/project/aqi-hub/](https://pypi.org/project/aqi-hub/)  
-本地预览文档：`make docs-serve`（需先 `uv sync --group dev`）  
+本地预览文档：`make docs-serve`（单页）；多版本预览（与线上一致的版本选择器）：`make docs-serve-versioned`（需先 `uv sync --group dev`）
+
+首次使用多版本文档时，请在仓库 **Settings → Pages** 中将 Source 设为 **Deploy from a branch**，Branch 选 **gh-pages**，目录选 **/ (root)**；之后由 workflow 推送到 `gh-pages` 即可发布。  
 
 ## Contents
 
@@ -49,7 +51,8 @@ AQI 计算，以及分指数计算
 
 ### AQI (CN)
 
-计算方法参照中华人民共和国生态环境部标准 **GB 3095-2026 环境空气质量标准** 与 **HJ 633-2026 环境空气质量指数（AQI）技术规定（试行）**。
+计算方法参照中华人民共和国生态环境部标准 **GB 3095-2026 环境空气质量标准** 与 **HJ 633-2026 环境空气质量指数（AQI）技术规定（试行）**。  
+**自 v0.3.0 起**采用 2026 版标准；v0.3.0 之前版本采用 2012 版标准。
 
 本库实现与 2026 版一致，主要约定包括：
 
