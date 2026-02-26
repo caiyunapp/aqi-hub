@@ -58,6 +58,7 @@ AQI 计算，以及分指数计算
 - **PM10**：良与轻度污染界限为 120 μg/m³（原 150）
 - **SO2 1 小时**：浓度超过 800 μg/m³ 时，IAQI 按 200 计（不再视为无效）
 - **O3 8 小时**：浓度超过 800 μg/m³ 时，IAQI 按 300 计（不再视为无效）
+- **新标准**：去掉了超标污染物的相关内容（仅保留首要污染物）
 
 #### AQI 等级说明
 
@@ -192,11 +193,11 @@ print(f"AQI 等级颜色: {color}")
 #### 5 污染物计算
 
 ```python
-from aqi_hub.aqi_cn.aqi import cal_primary_pollutant, cal_exceed_pollutant
+from aqi_hub.aqi_cn.aqi import cal_primary_pollutant
 
-# 5.1 计算主要污染物
+# 5.1 计算首要污染物
 iaqi = {
-    "PM25": 120,
+    "PM2.5": 120,
     "PM10": 180,
     "SO2": 65,
     "NO2": 150,
@@ -204,11 +205,7 @@ iaqi = {
     "O3": 200,
 }
 primary_pollutant = cal_primary_pollutant(iaqi)
-print(f"主要污染物: {primary_pollutant}")
-
-# 5.2 计算超标污染物
-exceed_pollutant = cal_exceed_pollutant(iaqi)
-print(f"超标污染物: {exceed_pollutant}")
+print(f"首要污染物: {primary_pollutant}")
 
 ```
 
@@ -232,8 +229,7 @@ aqi_obj = AQI(
 )
 print(f"AQI: {aqi_obj.AQI}")
 print(f"IAQI: {aqi_obj.IAQI}")
-print(f"主要污染物: {aqi_obj.primary_pollutant}")
-print(f"超标污染物: {aqi_obj.exceed_pollutant}")
+print(f"首要污染物: {aqi_obj.primary_pollutant}")
 print(f"AQI 等级: {aqi_obj.aqi_level}")
 print(f"AQI 等级颜色 (RGB): {aqi_obj.aqi_color_rgb}")
 print(f"AQI 等级颜色 (CMYK): {aqi_obj.aqi_color_cmyk}")
@@ -243,8 +239,7 @@ print(f"AQI 等级颜色 (CMYK_HEX): {aqi_obj.aqi_color_cmyk_hex}")
 """
 AQI: 155
 IAQI: {'PM2.5': 155, 'PM10': 124, 'SO2': 22, 'NO2': 135, 'CO': 25, 'O3': 137}
-主要污染物: ['PM2.5']
-超标污染物: ['PM2.5', 'PM10', 'NO2', 'O3']
+首要污染物: ['PM2.5']
 AQI 等级: 4
 AQI 等级颜色 (RGB): (255, 0, 0)
 AQI 等级颜色 (CMYK): (0, 100, 100, 0)

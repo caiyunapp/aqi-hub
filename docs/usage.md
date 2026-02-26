@@ -59,10 +59,10 @@ color = get_aqi_level_color(3, "RGB_HEX")  # "#FF7E00"
 color = get_aqi_level_color(4, "CMYK_HEX")
 ```
 
-### 5. 首要污染物与超标污染物
+### 5. 首要污染物
 
 ```python
-from aqi_hub.aqi_cn.aqi import cal_primary_pollutant, cal_exceed_pollutant
+from aqi_hub.aqi_cn.aqi import cal_primary_pollutant
 
 iaqi = {
     "PM2.5": 120,
@@ -73,8 +73,7 @@ iaqi = {
     "O3": 200,
 }
 primary = cal_primary_pollutant(iaqi)   # IAQI > 50 且最大的污染物
-exceed = cal_exceed_pollutant(iaqi)     # IAQI > 100 的污染物
-print(f"首要污染物: {primary}, 超标污染物: {exceed}")
+print(f"首要污染物: {primary}")
 ```
 
 ### 6. AQI 类（一站式）
@@ -94,7 +93,6 @@ aqi_obj = AQI(
 print(f"AQI: {aqi_obj.AQI}")
 print(f"IAQI: {aqi_obj.IAQI}")
 print(f"首要污染物: {aqi_obj.primary_pollutant}")
-print(f"超标污染物: {aqi_obj.exceed_pollutant}")
 print(f"AQI 等级: {aqi_obj.aqi_level}")
 print(f"颜色 RGB: {aqi_obj.aqi_color_rgb}")
 print(f"颜色 HEX: {aqi_obj.aqi_color_rgb_hex}")

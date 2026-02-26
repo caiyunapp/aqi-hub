@@ -7,7 +7,7 @@
 主要功能:
 1. 计算单项空气质量指数 (IAQI)
 2. 计算小时和日均 AQI
-3. 识别首要污染物和超标污染物
+3. 识别首要污染物
 4. 获取 AQI 等级和对应的颜色标识
 
 支持的污染物:
@@ -141,8 +141,8 @@ def cal_aqi_cn(
         co: CO 浓度, 单位: mg/m³
         o3: O3 浓度, 单位: μg/m³
         data_type: 数据类型，可选值:
-            - "hourly": 使用小时值计算
-            - "daily": 使用日均值计算 (O3 使用 8 小时滑动平均)
+            - "hourly": 实时报，使用小时值计算（6 项：PM2.5/PM10/SO2/NO2/CO 1h、O3 1h）
+            - "daily": 日报，日均值（O3 用 8h 滑动平均，不含 O3_1H）
 
     Returns:
         Tuple[Optional[int], Dict[str, Optional[int]]]:
@@ -157,6 +157,7 @@ def cal_aqi_cn(
         raise ValueError("data_type must be 'hourly' or 'daily'")
 
     if data_type == "hourly":
+        # 实时报：使用小时值计算（6 项 — PM2.5/PM10/SO2/NO2/CO 1h、O3 1h）
         pm25_iaqi = cal_iaqi_cn("PM25_1H", pm25)
         pm10_iaqi = cal_iaqi_cn("PM10_1H", pm10)
         so2_iaqi = cal_iaqi_cn("SO2_1H", so2)
@@ -164,6 +165,7 @@ def cal_aqi_cn(
         co_iaqi = cal_iaqi_cn("CO_1H", co)
         o3_iaqi = cal_iaqi_cn("O3_1H", o3)
     else:
+        # 日报：6 项日均，O3 用 8h 滑动平均（不含 O3_1H）
         pm25_iaqi = cal_iaqi_cn("PM25_24H", pm25)
         pm10_iaqi = cal_iaqi_cn("PM10_24H", pm10)
         so2_iaqi = cal_iaqi_cn("SO2_24H", so2)
@@ -207,27 +209,6 @@ def cal_primary_pollutant(iaqi: Dict[str, int]) -> List[str]:
         if value > 50 and value == max_iaqi:
             primary_pollutant.append(item)
     return primary_pollutant
-
-
-def cal_exceed_pollutant(iaqi: Dict[str, int]) -> List[str]:
-    """计算超标污染物
-
-    超标污染物是指 IAQI 值大于 100 的污染物。IAQI 大于 100 表示该污染物浓度超过
-    国家空气质量二级标准（适用于居住区、商业交通居民混合区、文化区、一般工业区和农村地区）。
-
-    Args:
-        iaqi: IAQI 值字典，键为污染物名称，值为 IAQI 值
-
-    Returns:
-        List[str]: 超标污染物列表。如果没有超标污染物，返回空列表
-    """
-    if not isinstance(iaqi, dict):
-        raise TypeError("iaqi must be a dictionary")
-    exceed_pollutant = []
-    for item, value in iaqi.items():
-        if value is not None and value > 100:
-            exceed_pollutant.append(item)
-    return exceed_pollutant
 
 
 def get_aqi_level(aqi: Union[int, None]) -> Union[int, None]:
@@ -321,9 +302,7 @@ class AQI:
         aqi_color_rgb_hex (str): RGB 十六进制颜色代码
         aqi_color_cmyk_hex (str): CMYK 十六进制颜色代码
         primary_pollutant (List[str]): 首要污染物列表 (英文)
-        exceed_pollutant (List[str]): 超标污染物列表 (英文)
         primary_pollutant_cn (List[str]): 首要污染物列表 (中文)
-        exceed_pollutant_cn (List[str]): 超标污染物列表 (中文)
 
     Args:
         pm25: PM2.5 浓度, 单位: μg/m³
@@ -333,8 +312,8 @@ class AQI:
         co: CO 浓度, 单位: mg/m³
         o3: O3 浓度, 单位: μg/m³
         data_type: 数据类型，可选值:
-            - "hourly": 使用小时值计算
-            - "daily": 使用日均值计算 (O3 使用 8 小时滑动平均)
+            - "hourly": 实时报，使用小时值计算（6 项：PM2.5/PM10/SO2/NO2/CO 1h、O3 1h）
+            - "daily": 日报，日均值（O3 用 8h 滑动平均，不含 O3_1H）
     """
 
     def __init__(
@@ -407,16 +386,8 @@ class AQI:
         return cal_primary_pollutant(self.IAQI)
 
     @property
-    def exceed_pollutant(self) -> List[str]:
-        return cal_exceed_pollutant(self.IAQI)
-
-    @property
     def primary_pollutant_cn(self) -> List[str]:
         return [POLLUTANT_MAP[item] for item in self.primary_pollutant]
-
-    @property
-    def exceed_pollutant_cn(self) -> List[str]:
-        return [POLLUTANT_MAP[item] for item in self.exceed_pollutant]
 
 
 if __name__ == "__main__":
