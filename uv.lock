@@ -20,7 +20,7 @@ dev = [
 [package.metadata.requires-dev]
 dev = [
     { name = "mike", specifier = ">=2.0" },
-    { name = "mkdocs", specifier = ">=1.6.1" },
+    { name = "mkdocs", specifier = ">=1.6.1,<2" },
     { name = "mkdocs-material", specifier = ">=9.7.3" },
     { name = "pytest" },
     { name = "ruff" },
