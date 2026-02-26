@@ -69,7 +69,7 @@ def cal_iaqi_cn(item: str, value: Union[int, float, None]) -> Optional[int]:
     """计算单项污染物的 IAQI (Individual Air Quality Index)
 
     根据污染物类型和浓度值计算对应的 IAQI。
-    PM2.5 和 PM10 无逐小时的 IAQI 计算方法, 直接采用 24 小时的浓度限值计算。
+    PM25_1H / PM10_1H 使用与 24H 相同的分段与浓度限值。
     SO2_1H 和 O3_8H 的浓度限值为 800 μg/m³：
     - SO2_1H 超过 800 μg/m³ 时，IAQI 按 200 计；
     - O3_8H 超过 800 μg/m³ 时，IAQI 按 300 计。
