@@ -11,18 +11,27 @@ theme:
   language: zh
   palette:
     - scheme: default
-      primary: teal
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: 深色模式
     - scheme: slate
-      primary: teal
+      primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: 浅色模式
+  font:
+    text: Noto Sans SC
+    code: Roboto Mono
 
 plugins:
   - search
+
+extra:
+  version:
+    provider: mike
 
 nav:
   - 介绍: index.md

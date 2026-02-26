@@ -55,12 +55,14 @@ docs-serve:
 
 # 多版本文档本地预览（与 GitHub Pages 一致的版本选择器）
 # 首次运行会先 deploy 一次 latest 并设为默认，再启动 mike serve。
+# 若本地 gh-pages 与 origin/gh-pages 历史不一致（如曾用旧方式部署），会报 unrelated：
+# 可先执行一次 git push origin gh-pages --force，或对下面两条 mike 命令加 --ignore-remote-status。
 # 根路径 / 会跳转到默认版本；页面顶部有版本下拉框可切换。
 # 若要在本地看到多个版本（如 0.3.0、0.2.1），需先分别 deploy 再 serve，例如：
-#   git checkout v0.2.1 && uv run mike deploy 0.2.1 && git checkout main
-#   uv run mike deploy latest && uv run mike deploy 0.3.0
+#   git checkout v0.2.1 && uv run mike deploy 0.2.1 --ignore-remote-status && git checkout main
+#   uv run mike deploy latest --ignore-remote-status && uv run mike deploy 0.3.0 --ignore-remote-status
 #   uv run mike set-default latest && uv run mike serve
 docs-serve-versioned:
-	uv run mike deploy latest
-	uv run mike set-default latest
+	uv run mike deploy latest --ignore-remote-status
+	uv run mike set-default latest --ignore-remote-status
 	uv run mike serve
