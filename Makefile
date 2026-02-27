@@ -1,37 +1,42 @@
-.PHONY: help build fmt lint sync lock upgrade all test docs-serve docs-serve-versioned
+.PHONY: help build develop fmt lint sync lock upgrade all test docs docs-rust
 
 export UV_PYTHON_PREFERENCE=only-system
 export PYTHONPATH := $(shell pwd)
 export PYTHON := python3
 
+CRATE := aqi-hub
+RUFF := uv run ruff
+
 help:
 	@echo "Usage: make [target]"
-	@echo "Targets:"
-	@echo "  build       Build the project"
-	@echo "  fmt         Format the code"
-	@echo "  lint        Lint the code"
-	@echo "  sync        Sync the dependencies"
-	@echo "  lock        Lock the dependencies"
-	@echo "  upgrade     Upgrade the dependencies"
-	@echo "  all         Build, format, lint, sync, lock, and upgrade"
-	@echo "  test        Run the tests"
-	@echo "  docs-serve  Run MkDocs dev server (single-version preview)"
-	@echo "  docs-serve-versioned  Run mike serve (multi-version preview with version selector)"
-	
+	@echo "  build    Python wheel"
+	@echo "  develop  Install native extension (maturin)"
+	@echo "  fmt      Format code (ruff + cargo fmt)"
+	@echo "  lint     Check style & clippy"
+	@echo "  sync     uv sync --compile"
+	@echo "  lock     uv lock"
+	@echo "  upgrade  uv lock --upgrade"
+	@echo "  all      lock, sync, fmt, lint, diff"
+	@echo "  test     Lint + pytest + cargo test"
+	@echo "  docs     MkDocs serve"
+	@echo "  docs-rust  cargo doc --open"
+
 build:
 	uv build --no-sources
 
+develop:
+	uv run maturin develop --release
+
 fmt:
-	uv run ruff check --select I --fix .
-	uv run ruff format .
+	$(RUFF) check --fix .
+	$(RUFF) format .
+	cargo fmt
 
 lint:
-	uv run ruff check .
-	uv run ruff format --check .
-
-fix:
-	uv run ruff check --fix .
-	uv run ruff format .
+	$(RUFF) check .
+	$(RUFF) format --check .
+	cargo fmt -- --check
+	cargo clippy -p $(CRATE)
 
 sync:
 	uv sync --compile
@@ -43,26 +48,16 @@ upgrade:
 	uv lock --upgrade
 
 all: lock sync
-	make fmt
-	make lint
-	git diff --exit-code || (echo "Please run 'make fmt' and 'make lint' or commit changes to fix the above issues." && exit 1)
+	$(MAKE) fmt
+	$(MAKE) lint
+	@git diff --exit-code || (echo "Run 'make fmt' and 'make lint' or commit." && exit 1)
 
 test: lint
 	uv run pytest -v .
+	cargo test -p $(CRATE)
 
-docs-serve:
+docs:
 	uv run mkdocs serve
 
-# 多版本文档本地预览（与 GitHub Pages 一致的版本选择器）
-# 首次运行会先 deploy 一次 latest 并设为默认，再启动 mike serve。
-# 若本地 gh-pages 与 origin/gh-pages 历史不一致（如曾用旧方式部署），会报 unrelated：
-# 可先执行一次 git push origin gh-pages --force，或对下面两条 mike 命令加 --ignore-remote-status。
-# 根路径 / 会跳转到默认版本；页面顶部有版本下拉框可切换。
-# 若要在本地看到多个版本（如 0.3.0、0.2.1），需先分别 deploy 再 serve，例如：
-#   git checkout v0.2.1 && uv run mike deploy 0.2.1 --ignore-remote-status && git checkout main
-#   uv run mike deploy latest --ignore-remote-status && uv run mike deploy 0.3.0 --ignore-remote-status
-#   uv run mike set-default latest && uv run mike serve
-docs-serve-versioned:
-	uv run mike deploy latest --ignore-remote-status
-	uv run mike set-default latest --ignore-remote-status
-	uv run mike serve
+docs-rust:
+	cargo doc -p $(CRATE) --no-deps --open

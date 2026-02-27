@@ -6,13 +6,7 @@ from .aqi import (
     get_aqi_level,
     get_aqi_level_color,
 )
-from .common import (
-    AQI_LEVEL,
-    POLLUTANT,
-    POLLUTANT_CN,
-    POLLUTANT_MAP,
-    breakpoints,
-)
+from .common import AQI_LEVEL, POLLUTANT, POLLUTANT_CN, POLLUTANT_MAP
 
 __all__ = [
     "AQI",
@@ -25,5 +19,4 @@ __all__ = [
     "POLLUTANT",
     "POLLUTANT_CN",
     "POLLUTANT_MAP",
-    "breakpoints",
 ]

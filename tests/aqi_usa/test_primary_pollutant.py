@@ -53,17 +53,15 @@ def test_cal_primary_pollutant_valid(iaqi_dict, expected_pollutants):
 
 
 def test_cal_primary_pollutant_empty_dict():
-    """测试空字典情况下的警告"""
-    with pytest.warns(UserWarning, match="IAQI字典为空"):
-        result = cal_primary_pollutant({})
-        assert result == []
+    """测试空字典情况（Rust 实现不发出 UserWarning）"""
+    result = cal_primary_pollutant({})
+    assert result == []
 
 
 def test_cal_primary_pollutant_all_none():
-    """测试所有值为None的情况下的警告"""
-    with pytest.warns(UserWarning, match="所有污染物IAQI值均为None"):
-        result = cal_primary_pollutant({"PM2.5": None, "PM10": None, "SO2": None})
-        assert result == []
+    """测试所有值为None的情况（Rust 实现不发出 UserWarning）"""
+    result = cal_primary_pollutant({"PM2.5": None, "PM10": None, "SO2": None})
+    assert result == []
 
 
 if __name__ == "__main__":

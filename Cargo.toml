@@ -1,0 +1,24 @@
+[package]
+name = "aqi-hub"
+version = "1.0.0"
+edition = "2021"
+description = "Air quality index (AQI) calculation - China (GB 3095-2026, HJ 633-2026) and USA EPA standards"
+license = "MIT"
+repository = "https://github.com/caiyunapp/aqi-hub"
+keywords = ["aqi", "air-quality", "environment"]
+categories = ["science"]
+
+[lib]
+name = "aqi_hub_native"
+path = "src/lib.rs"
+crate-type = ["rlib", "cdylib"]
+
+[features]
+default = []
+python = ["pyo3"]
+
+[dependencies]
+pyo3 = { version = "0.22", optional = true, features = ["extension-module"] }
+
+[package.metadata.docs.rs]
+all-features = false
