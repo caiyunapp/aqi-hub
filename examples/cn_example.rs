@@ -2,7 +2,7 @@
 //!
 //! 运行: `cargo run --example cn_example`（在项目根目录）
 
-use aqi_hub_native::{
+use aqi_hub::{
     cal_aqi_cn, cal_iaqi_cn, cal_primary_pollutant_cn, cn_item_from_str, get_aqi_level_cn,
     get_aqi_level_color_cn, DataType,
 };

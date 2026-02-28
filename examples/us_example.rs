@@ -4,7 +4,7 @@
 //!
 //! 浓度单位: PM2.5/PM10 μg/m³, SO2/NO2 ppb, CO/O3 ppm
 
-use aqi_hub_native::{
+use aqi_hub::{
     cal_aqi_usa, cal_iaqi_usa, cal_primary_pollutant_usa, get_aqi_level_color_usa,
     get_aqi_level_usa, usa_item_from_str,
 };

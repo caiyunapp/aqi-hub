@@ -7,7 +7,7 @@
 //! 小时值（时均，用 `DataType::Hourly`）：
 //!
 //! ```rust
-//! use aqi_hub_native::{cal_aqi_cn, cal_primary_pollutant_cn, get_aqi_level_cn, get_aqi_level_color_cn, DataType};
+//! use aqi_hub::{cal_aqi_cn, cal_primary_pollutant_cn, get_aqi_level_cn, get_aqi_level_color_cn, DataType};
 //!
 //! let (aqi, iaqi) = cal_aqi_cn(
 //!     Some(45.0), Some(80.0), Some(35.0), Some(85.0), Some(3.0), Some(140.0),
@@ -21,7 +21,7 @@
 //! 日均值（用 `DataType::Daily`）：
 //!
 //! ```rust
-//! use aqi_hub_native::{cal_aqi_cn, cal_primary_pollutant_cn, get_aqi_level_cn, get_aqi_level_color_cn, DataType};
+//! use aqi_hub::{cal_aqi_cn, cal_primary_pollutant_cn, get_aqi_level_cn, get_aqi_level_color_cn, DataType};
 //!
 //! let (aqi, iaqi) = cal_aqi_cn(
 //!     Some(60.0), Some(80.0), None, None, None, Some(100.0),
@@ -36,7 +36,7 @@
 //! ## 美国 AQI
 //!
 //! ```rust
-//! use aqi_hub_native::{cal_aqi_usa, cal_primary_pollutant_usa, get_aqi_level_usa, get_aqi_level_color_usa};
+//! use aqi_hub::{cal_aqi_usa, cal_primary_pollutant_usa, get_aqi_level_usa, get_aqi_level_color_usa};
 //!
 //! // PM2.5=5 μg/m³, PM10=40, NO2=40 ppb, CO=2 ppm, O3_8h=0.04 ppm
 //! let (aqi, iaqi) = cal_aqi_usa(5.0, 40.0, None, 40.0, 2.0, 0.04, None, None);

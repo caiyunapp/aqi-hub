@@ -134,7 +134,7 @@ fn usa_config(item: UsaItem) -> UsaItemConfig {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::{cal_iaqi_usa, UsaItem};
+/// use aqi_hub::{cal_iaqi_usa, UsaItem};
 ///
 /// let iaqi = cal_iaqi_usa(UsaItem::PM25_24H, 9.0);
 /// assert_eq!(iaqi, Some(50));
@@ -144,13 +144,14 @@ fn usa_config(item: UsaItem) -> UsaItemConfig {
 pub fn cal_iaqi_usa(item: UsaItem, conc: f64) -> Option<i32> {
     let cfg = usa_config(item);
     let scale = cfg.scale;
-    let conc_scaled = (conc * scale).round();
-    let min_scaled = (cfg.min_val * scale).round();
-    let max_scaled = (cfg.max_val * scale).round();
+    // Truncate (toward zero) to match Python int(conc*scale) and EPA decimal rules; round() can shift values across thresholds.
+    let conc_scaled = (conc * scale).trunc();
+    let min_scaled = (cfg.min_val * scale).trunc();
+    let max_scaled = (cfg.max_val * scale).trunc();
 
     match item {
         UsaItem::O3_1H => {
-            let sing = (cfg.singularity.unwrap() * scale).round();
+            let sing = (cfg.singularity.unwrap() * scale).trunc();
             if conc_scaled < sing {
                 return None;
             }
@@ -163,7 +164,7 @@ pub fn cal_iaqi_usa(item: UsaItem, conc: f64) -> Option<i32> {
                 return None;
             }
             if let Some(s) = cfg.singularity {
-                let sing = (s * scale).round();
+                let sing = (s * scale).trunc();
                 if conc_scaled >= sing {
                     return None;
                 }
@@ -171,14 +172,14 @@ pub fn cal_iaqi_usa(item: UsaItem, conc: f64) -> Option<i32> {
         }
         UsaItem::SO2_1H => {
             if let Some(s) = cfg.singularity {
-                if conc_scaled > (s * scale).round() {
+                if conc_scaled > (s * scale).trunc() {
                     return None;
                 }
             }
         }
         UsaItem::SO2_24H => {
             if let Some(s) = cfg.singularity {
-                if conc_scaled < (s * scale).round() {
+                if conc_scaled < (s * scale).trunc() {
                     return None;
                 }
             }
@@ -193,11 +194,10 @@ pub fn cal_iaqi_usa(item: UsaItem, conc: f64) -> Option<i32> {
         }
     }
 
-    let mut sorted_bp = cfg.breakpoints.to_vec();
-    sorted_bp.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-    for (bp_lo, bp_hi, iaqi_lo, iaqi_hi) in sorted_bp {
-        let lo = (bp_lo * scale).round();
-        let hi = (bp_hi * scale).round();
+    // Breakpoints are static and already in ascending order by bp_lo; no allocation/sort.
+    for (bp_lo, bp_hi, iaqi_lo, iaqi_hi) in cfg.breakpoints.iter().copied() {
+        let lo = (bp_lo * scale).trunc();
+        let hi = (bp_hi * scale).trunc();
         if conc_scaled >= lo && conc_scaled <= hi {
             let iaqi = (iaqi_hi - iaqi_lo) * (conc_scaled - lo) / (hi - lo) + iaqi_lo;
             return Some(iaqi as i32); // truncate to match Python int()
@@ -222,7 +222,7 @@ pub struct UsaIaqiMap {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::cal_aqi_usa;
+/// use aqi_hub::cal_aqi_usa;
 ///
 /// let (aqi, iaqi) = cal_aqi_usa(5.0, 40.0, None, 40.0, 2.0, 0.04, None, None);
 /// assert_eq!(aqi, Some(37));
@@ -269,7 +269,7 @@ pub fn cal_aqi_usa(
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::{cal_aqi_usa, cal_primary_pollutant_usa};
+/// use aqi_hub::{cal_aqi_usa, cal_primary_pollutant_usa};
 ///
 /// let (_, iaqi) = cal_aqi_usa(150.0, 150.0, Some(30.0), 100.0, 4.0, 0.07, None, None);
 /// let primary = cal_primary_pollutant_usa(&iaqi);
@@ -310,7 +310,7 @@ pub fn cal_primary_pollutant_usa(iaqi: &UsaIaqiMap) -> Vec<String> {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::get_aqi_level_usa;
+/// use aqi_hub::get_aqi_level_usa;
 ///
 /// assert_eq!(get_aqi_level_usa(35), 1);
 /// assert_eq!(get_aqi_level_usa(100), 2);
@@ -337,7 +337,7 @@ pub fn get_aqi_level_usa(aqi: i32) -> i32 {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::get_aqi_level_color_usa;
+/// use aqi_hub::get_aqi_level_color_usa;
 ///
 /// let c = get_aqi_level_color_usa(5, "rgb").unwrap();
 /// assert_eq!(c.rgb, (143, 63, 151));

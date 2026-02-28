@@ -136,7 +136,7 @@ def testcal_iaqi_usa_warnings(conc, item, warning_msg, expected):
 @pytest.mark.parametrize(
     "conc,item,error_msg",
     [
-        (100, "INVALID_POLLUTANT", "item: .* must be one of dict_keys"),
+        (100, "INVALID_POLLUTANT", "item must be one of: PM25_24H"),
     ],
 )
 def testcal_iaqi_usa_errors(conc, item, error_msg):

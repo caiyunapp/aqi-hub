@@ -9,7 +9,7 @@ keywords = ["aqi", "air-quality", "environment"]
 categories = ["science"]
 
 [lib]
-name = "aqi_hub_native"
+name = "aqi_hub"
 path = "src/lib.rs"
 crate-type = ["rlib", "cdylib"]
 

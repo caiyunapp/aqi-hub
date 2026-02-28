@@ -107,7 +107,7 @@ AQI 计算，以及分指数计算。
 
 ### Rust 安装
 
-在 `Cargo.toml` 中添加依赖（不启用 `python` feature 时仅使用 Rust 核心，无 PyO3）：
+在 `Cargo.toml` 中添加依赖（不启用 `python` feature 时仅使用 Rust 核心，无 PyO3）。Rust 中 crate 名为 `aqi_hub`，与 Python 包名一致：
 
 ```toml
 [dependencies]

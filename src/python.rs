@@ -119,22 +119,26 @@ fn cal_aqi_usa(
     o3_8h: f64,
     so2_24h: Option<f64>,
     o3_1h: Option<f64>,
-) -> (Option<i32>, PyObject) {
+) -> PyResult<(Option<i32>, PyObject)> {
     let (aqi, iaqi) = usa::cal_aqi_usa(pm25, pm10, so2_1h, no2, co, o3_8h, so2_24h, o3_1h);
     let dict = PyDict::new_bound(py);
-    let _ = dict.set_item("PM2.5", iaqi.pm25);
-    let _ = dict.set_item("PM10", iaqi.pm10);
-    let _ = dict.set_item("SO2", iaqi.so2);
-    let _ = dict.set_item("NO2", iaqi.no2);
-    let _ = dict.set_item("CO", iaqi.co);
-    let _ = dict.set_item("O3", iaqi.o3);
-    (aqi, dict.into_py(py))
+    dict.set_item("PM2.5", iaqi.pm25)?;
+    dict.set_item("PM10", iaqi.pm10)?;
+    dict.set_item("SO2", iaqi.so2)?;
+    dict.set_item("NO2", iaqi.no2)?;
+    dict.set_item("CO", iaqi.co)?;
+    dict.set_item("O3", iaqi.o3)?;
+    Ok((aqi, dict.into_py(py)))
 }
 
 #[pyfunction(signature = (conc=None, *, item))]
 fn cal_iaqi_usa(conc: Option<f64>, item: &str) -> PyResult<Option<i32>> {
-    let item_enum = usa::usa_item_from_str(item)
-        .ok_or_else(|| PyValueError::new_err(format!("item: {} must be one of dict_keys", item)))?;
+    let item_enum = usa::usa_item_from_str(item).ok_or_else(|| {
+        PyValueError::new_err(format!(
+            "item must be one of: PM25_24H, PM10_24H, SO2_1H, SO2_24H, NO2_1H, CO_8H, O3_8H, O3_1H; got {:?}",
+            item
+        ))
+    })?;
     let c = match conc {
         Some(x) => x,
         None => return Ok(None),

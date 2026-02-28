@@ -138,7 +138,7 @@ fn breakpoints_cn(item: CnItem) -> &'static [Breakpoint] {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::{cal_iaqi_cn, CnItem};
+/// use aqi_hub::{cal_iaqi_cn, CnItem};
 ///
 /// let iaqi = cal_iaqi_cn(CnItem::PM25_24H, 35.0);
 /// assert_eq!(iaqi, Some(50));
@@ -174,7 +174,7 @@ pub enum DataType {
 /// 小时值（时均）：
 ///
 /// ```
-/// use aqi_hub_native::{cal_aqi_cn, DataType};
+/// use aqi_hub::{cal_aqi_cn, DataType};
 ///
 /// let (aqi, iaqi) = cal_aqi_cn(
 ///     Some(45.0), Some(80.0), Some(35.0), Some(85.0), Some(3.0), Some(140.0),
@@ -187,7 +187,7 @@ pub enum DataType {
 /// 日均值：
 ///
 /// ```
-/// use aqi_hub_native::{cal_aqi_cn, DataType};
+/// use aqi_hub::{cal_aqi_cn, DataType};
 ///
 /// let (aqi, iaqi) = cal_aqi_cn(
 ///     Some(60.0), Some(80.0), None, None, None, Some(100.0),
@@ -279,7 +279,7 @@ impl CnIaqiMap {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::{cal_aqi_cn, cal_primary_pollutant_cn, DataType};
+/// use aqi_hub::{cal_aqi_cn, cal_primary_pollutant_cn, DataType};
 ///
 /// let (_, iaqi) = cal_aqi_cn(
 ///     Some(80.0), Some(80.0), None, None, None, Some(100.0),
@@ -323,7 +323,7 @@ pub fn cal_primary_pollutant_cn(iaqi: &CnIaqiMap) -> Vec<String> {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::get_aqi_level_cn;
+/// use aqi_hub::get_aqi_level_cn;
 ///
 /// assert_eq!(get_aqi_level_cn(35), Some(1));
 /// assert_eq!(get_aqi_level_cn(100), Some(2));
@@ -355,7 +355,7 @@ pub fn get_aqi_level_cn(aqi: i32) -> Option<i32> {
 /// # Examples
 ///
 /// ```
-/// use aqi_hub_native::get_aqi_level_color_cn;
+/// use aqi_hub::get_aqi_level_color_cn;
 ///
 /// let c = get_aqi_level_color_cn(1, "rgb").unwrap();
 /// assert_eq!(c.rgb, (0, 228, 0));
