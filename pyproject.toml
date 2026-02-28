@@ -1,7 +1,7 @@
 [project]
 name = "aqi-hub"
-
-description = "Air quality index hub"
+version = "1.0.0"
+description = "Air quality index hub (Rust core, Python bindings)"
 maintainers = [
     { name = "caiyunapp", email = "oss@caiyunapp.com" },
     { name = "Water Ghost", email = "maxlee1991zyz@gmail.com" },
@@ -13,12 +13,10 @@ authors = [
     { name = "ringsaturn", email = "ringsaturn.me@gmail.com" },
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.14"
 keywords = ["aqi", "air quality"]
 
 dependencies = []
-
-dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/caiyunapp/aqi-hub"
@@ -26,6 +24,7 @@ Issues = "https://github.com/caiyunapp/aqi-hub/issues"
 
 [dependency-groups]
 dev = [
+    "maturin>=1.6,<2",
     "mkdocs>=1.6.1,<2",
     "mkdocs-material>=9.7.3",
     "mike>=2.0",
@@ -33,18 +32,18 @@ dev = [
     "ruff",
 ]
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/aqi_hub"]
+[build-system]
+requires = ["maturin>=1.6,<2"]
+build-backend = "maturin"
 
-[tool.hatch.build.targets.sdist]
+[tool.maturin]
+features = ["python"]
+python-source = "src"
+module-name = "aqi_hub._native"
+
+[tool.maturin.sdist]
 include = ["src/aqi_hub/**/*.py", "LICENSE", "README.md"]
 
-[build-system]
-requires = ["hatchling", "hatch-vcs"]
-build-backend = "hatchling.build"
-
-# [tool.hatch-vcs]
-# version-scheme = "post-release"
-
-[tool.hatch.version]
-source = "vcs"
+[tool.ruff.lint.per-file-ignores]
+"src/aqi_hub/aqi_cn/aqi.py" = ["I001"]
+"src/aqi_hub/aqi_usa/aqi.py" = ["I001"]

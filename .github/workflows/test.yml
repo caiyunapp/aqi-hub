@@ -1,5 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+# CI: 安装依赖、Rust 构建与测试、Python 格式/检查/测试
 
 name: Test
 
@@ -10,25 +9,54 @@ on:
     branches: ["main"]
 
 jobs:
-  Test:
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Check (no Python feature)
+        run: cargo check
+
+      - name: Test (no Python feature)
+        run: cargo test
+
+  test:
+    name: Python (${{ matrix.python-version }} on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ["macos-latest", "ubuntu-latest", "windows-latest"]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Install uv
-        uses: astral-sh/setup-uv@v7
+        uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
 
-      - run: make all
+      - name: Sync and install dev deps
+        run: uv sync --group dev
+
+      - name: Build native extension
+        run: uv run maturin develop --release
+
+      - name: Format and lint
+        run: make all
+
+      - name: Test
+        run: uv run pytest -v .

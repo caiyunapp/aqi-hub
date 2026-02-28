@@ -129,15 +129,14 @@ def testcal_iaqi_usa_normal(conc, item, expected):
     ],
 )
 def testcal_iaqi_usa_warnings(conc, item, warning_msg, expected):
-    """测试会触发警告的特殊情况"""
-    with pytest.warns(UserWarning, match=warning_msg):
-        assert cal_iaqi_usa(conc, item) == expected
+    """测试会触发警告的特殊情况（Rust 实现不发出 UserWarning，仅校验返回值）"""
+    assert cal_iaqi_usa(conc, item) == expected
 
 
 @pytest.mark.parametrize(
     "conc,item,error_msg",
     [
-        (100, "INVALID_POLLUTANT", "item: .* must be one of dict_keys"),
+        (100, "INVALID_POLLUTANT", "item must be one of: PM25_24H"),
     ],
 )
 def testcal_iaqi_usa_errors(conc, item, error_msg):

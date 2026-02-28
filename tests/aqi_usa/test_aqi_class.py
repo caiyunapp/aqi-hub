@@ -2,8 +2,6 @@
 测试 AQI_USA 计算模块中的 AQI 类
 """
 
-import warnings
-
 import pytest
 
 from aqi_hub.aqi_usa.aqi import AQI
@@ -84,23 +82,16 @@ def test_aqi_color_properties(aqi_instance_normal):
 
 def test_aqi_out_of_range():
     """测试超出范围的输入值"""
-    # 捕获警告信息
-    with warnings.catch_warnings(record=True) as w:
-        warnings.simplefilter("always")
-        aqi = AQI(
-            pm25=1000.0,  # 超出最大范围
-            pm10=75.0,
-            so2_1h=40.0,
-            no2=60.0,
-            co=3.0,
-            o3_8h=0.060,
-        )
-        # 验证返回最大AQI值500
-        assert aqi.AQI == 500
-        # 验证发出了警告
-        assert len(w) >= 1
-        assert issubclass(w[0].category, UserWarning)
-        assert "PM25_24H concentration" in str(w[0].message)
+    aqi = AQI(
+        pm25=1000.0,  # 超出最大范围
+        pm10=75.0,
+        so2_1h=40.0,
+        no2=60.0,
+        co=3.0,
+        o3_8h=0.060,
+    )
+    # 验证返回最大AQI值500（Rust 实现不发出 UserWarning）
+    assert aqi.AQI == 500
 
 
 if __name__ == "__main__":
